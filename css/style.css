@@ -1,0 +1,306 @@
+/* ===== CSS RESET & VARIABLES ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --red:       #c0392b;
+  --red-dark:  #962d22;
+  --gold:      #f0c040;
+  --gold-dark: #d4a017;
+  --bg:        #f5f5f5;
+  --white:     #ffffff;
+  --text:      #222222;
+  --muted:     #666666;
+  --border:    #dddddd;
+  --radius:    8px;
+  --shadow:    0 2px 8px rgba(0,0,0,.12);
+}
+
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* ===== HEADER ===== */
+.site-header {
+  background: linear-gradient(135deg, var(--red) 0%, var(--red-dark) 100%);
+  color: var(--white);
+  padding: 18px 0 14px;
+  box-shadow: var(--shadow);
+}
+
+.site-header .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-icon { font-size: 2rem; }
+
+.logo-text {
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-shadow: 1px 1px 3px rgba(0,0,0,.3);
+}
+
+.tagline {
+  font-size: .9rem;
+  opacity: .88;
+  letter-spacing: .5px;
+}
+
+/* ===== REGION NAVIGATION ===== */
+.region-nav {
+  background: var(--red-dark);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 6px rgba(0,0,0,.2);
+}
+
+.region-nav .container {
+  display: flex;
+  gap: 0;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 14px 8px;
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,.75);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .2s, color .2s;
+  border-bottom: 3px solid transparent;
+}
+
+.tab-btn:hover {
+  background: rgba(255,255,255,.1);
+  color: var(--white);
+}
+
+.tab-btn.active {
+  color: var(--gold);
+  border-bottom-color: var(--gold);
+  background: rgba(0,0,0,.15);
+}
+
+/* ===== DATE NAVIGATION ===== */
+.date-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 18px 0 12px;
+  flex-wrap: wrap;
+}
+
+.date-btn {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: .95rem;
+  transition: background .2s, box-shadow .2s;
+  box-shadow: var(--shadow);
+}
+
+.date-btn:hover { background: #eee; }
+
+.today-btn {
+  background: var(--red);
+  color: var(--white);
+  border-color: var(--red);
+  font-weight: 600;
+}
+
+.today-btn:hover { background: var(--red-dark); border-color: var(--red-dark); }
+
+#date-picker {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: .95rem;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+}
+
+/* ===== STATE BOXES (loading / error) ===== */
+.state-box {
+  text-align: center;
+  padding: 48px 20px;
+  color: var(--muted);
+}
+
+.state-box.error { color: var(--red); }
+
+.spinner {
+  width: 44px;
+  height: 44px;
+  border: 5px solid var(--border);
+  border-top-color: var(--red);
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+  margin: 0 auto 16px;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ===== RESULT PANEL ===== */
+.result-panel { padding-bottom: 40px; }
+
+.panel-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--red);
+  padding: 8px 0 16px;
+  border-bottom: 3px solid var(--gold);
+  margin-bottom: 20px;
+}
+
+/* ===== LOTTERY TABLE (MIỀN BẮC) ===== */
+.lottery-table-wrap {
+  overflow-x: auto;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  background: var(--white);
+  margin-bottom: 24px;
+}
+
+.lottery-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 480px;
+}
+
+.lottery-table caption {
+  background: var(--red);
+  color: var(--white);
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 10px 16px;
+  text-align: left;
+  letter-spacing: .5px;
+}
+
+.lottery-table th,
+.lottery-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+.lottery-table th {
+  background: #fdf0f0;
+  color: var(--red-dark);
+  font-weight: 700;
+  width: 150px;
+  font-size: .88rem;
+  text-transform: uppercase;
+  letter-spacing: .3px;
+  white-space: nowrap;
+}
+
+.lottery-table td { text-align: center; }
+
+.lottery-table tr:last-child th,
+.lottery-table tr:last-child td { border-bottom: none; }
+
+/* Prize number highlighting */
+.prize-numbers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.prize-num {
+  display: inline-block;
+  font-size: 1.05rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+  letter-spacing: 1px;
+}
+
+/* Special prize */
+.special .prize-num {
+  font-size: 1.5rem;
+  color: var(--white);
+  background: var(--red);
+  padding: 6px 16px;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(192,57,43,.4);
+}
+
+/* First prize */
+.first .prize-num {
+  font-size: 1.2rem;
+  color: var(--red-dark);
+  background: #ffeedd;
+  padding: 4px 12px;
+}
+
+/* Second and lower prizes */
+.second .prize-num,
+.third .prize-num { color: #8B4513; background: #fff8ee; }
+
+.fourth .prize-num,
+.fifth .prize-num  { color: #444; background: #f8f8f8; }
+
+.sixth .prize-num,
+.seventh .prize-num { color: var(--muted); background: #f2f2f2; font-size: .95rem; }
+
+/* Eighth prize (MT/MN) – last two digits highlighted */
+.eighth .prize-num {
+  font-size: 1.4rem;
+  color: var(--white);
+  background: var(--gold-dark);
+  padding: 5px 14px;
+  border-radius: 6px;
+}
+
+/* ===== MULTI-PROVINCE GRID (MT / MN) ===== */
+.province-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+/* ===== FOOTER ===== */
+.site-footer {
+  background: var(--red-dark);
+  color: rgba(255,255,255,.7);
+  text-align: center;
+  padding: 16px;
+  font-size: .85rem;
+  margin-top: 24px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 600px) {
+  .logo-text { font-size: 1.4rem; }
+  .tab-btn   { font-size: .85rem; padding: 12px 4px; }
+  .lottery-table th { width: 110px; font-size: .8rem; }
+  .special .prize-num { font-size: 1.2rem; }
+}

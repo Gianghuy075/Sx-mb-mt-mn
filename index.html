@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sổ Xố Miền Bắc – Miền Trung – Miền Nam</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container">
+      <div class="logo">
+        <span class="logo-icon">🎰</span>
+        <span class="logo-text">Sổ Xố Online</span>
+      </div>
+      <p class="tagline">Kết quả xổ số Miền Bắc · Miền Trung · Miền Nam</p>
+    </div>
+  </header>
+
+  <!-- Region tabs -->
+  <nav class="region-nav">
+    <div class="container">
+      <button class="tab-btn active" data-region="mb">🏙️ Miền Bắc</button>
+      <button class="tab-btn" data-region="mt">🌄 Miền Trung</button>
+      <button class="tab-btn" data-region="mn">🌴 Miền Nam</button>
+    </div>
+  </nav>
+
+  <!-- Main content -->
+  <main class="container">
+    <!-- Date navigation -->
+    <div class="date-nav">
+      <button id="btn-prev" class="date-btn" title="Ngày trước">&#8592;</button>
+      <input type="date" id="date-picker" />
+      <button id="btn-next" class="date-btn" title="Ngày sau">&#8594;</button>
+      <button id="btn-today" class="date-btn today-btn">Hôm nay</button>
+    </div>
+
+    <!-- Loading / error states -->
+    <div id="loading" class="state-box" hidden>
+      <div class="spinner"></div>
+      <p>Đang tải kết quả…</p>
+    </div>
+    <div id="error-box" class="state-box error" hidden>
+      <p id="error-msg">Không thể tải kết quả. Vui lòng thử lại.</p>
+      <button id="btn-retry" class="date-btn">Thử lại</button>
+    </div>
+
+    <!-- Results panels -->
+    <section id="panel-mb" class="result-panel">
+      <h2 class="panel-title">Kết quả Xổ số Miền Bắc</h2>
+      <div id="result-mb"></div>
+    </section>
+
+    <section id="panel-mt" class="result-panel" hidden>
+      <h2 class="panel-title">Kết quả Xổ số Miền Trung</h2>
+      <div id="result-mt"></div>
+    </section>
+
+    <section id="panel-mn" class="result-panel" hidden>
+      <h2 class="panel-title">Kết quả Xổ số Miền Nam</h2>
+      <div id="result-mn"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© 2024 Sổ Xố Online – Thông tin mang tính chất tham khảo.</p>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
