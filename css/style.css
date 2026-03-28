@@ -932,44 +932,47 @@ body {
   /* Main nav - ensure it displays properly */
   .main-nav {
     position: relative;
-    display: none;
+    display: block !important;
   }
 
   /* Mobile navigation - side drawer from right */
   .nav-container {
-    position: fixed;
-    top: 0;
-    right: 0;
-    width: 70%;
-    max-width: 280px;
-    height: 100vh;
-    background: var(--primary-red);
-    flex-direction: column;
-    z-index: 1000;
-    box-shadow: -4px 0 12px rgba(0,0,0,0.2);
-    overflow-y: auto;
+    position: fixed !important;
+    top: 0 !important;
+    right: 0 !important;
+    width: 70% !important;
+    max-width: 280px !important;
+    height: 100vh !important;
+    background: var(--primary-red) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    z-index: 1001 !important;
+    box-shadow: -4px 0 12px rgba(0,0,0,0.2) !important;
+    overflow-y: auto !important;
     -webkit-overflow-scrolling: touch;
-    transform: translateX(100%);
+    transform: translateX(100%) !important;
     transition: transform 0.3s ease-out;
-    padding-top: 0;
+    padding-top: 0 !important;
   }
 
   .nav-container.active {
-    transform: translateX(0);
+    transform: translateX(0) !important;
   }
 
   .nav-item {
-    display: block;
-    width: 100%;
-    padding: 14px 16px;
-    font-size: 13px;
-    border: none;
-    border-bottom: 1px solid rgba(255,255,255,0.15);
-    text-align: left;
-    background: transparent;
-    color: var(--white);
-    flex: 0 0 auto;
+    display: block !important;
+    width: 100% !important;
+    padding: 14px 16px !important;
+    font-size: 13px !important;
+    border: none !important;
+    border-bottom: 1px solid rgba(255,255,255,0.15) !important;
+    text-align: left !important;
+    background: transparent !important;
+    color: var(--white) !important;
+    flex: 0 0 auto !important;
     transition: background 0.2s;
+    align-items: unset !important;
+    justify-content: unset !important;
   }
 
   .nav-item:last-child {
@@ -989,7 +992,7 @@ body {
     right: 0;
     bottom: 0;
     background: rgba(0,0,0,0.4);
-    z-index: 999;
+    z-index: 998;
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.3s, visibility 0.3s;
