@@ -1,16 +1,62 @@
 /**
  * Sổ Xố Online – Miền Bắc / Miền Trung / Miền Nam
- *
- * Data source: https://xsapi.vn  (free, no-auth lottery API)
- * Fallback:    generated demo data so the UI is always usable
  */
 
-/* ─────────────────────────────────────────────
-   Constants & schedules
-───────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', function() {
+  initializeInterface();
+});
 
-/** Provinces that draw on each weekday (0 = Sun … 6 = Sat).
- *  Index corresponds to JS Date.getDay() */
+function initializeInterface() {
+  // Initialize day tabs
+  const dayTabs = document.querySelectorAll('.day-tab');
+  dayTabs.forEach((tab, index) => {
+    tab.addEventListener('click', function() {
+      dayTabs.forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+
+  // Set today's date info
+  updateDateInfo();
+
+  // Set date inputs
+  const today_formatted = new Date().toISOString().split('T')[0];
+  const dateInputs = document.querySelectorAll('.date-range input[type="date"]');
+  if (dateInputs.length > 0) {
+    dateInputs[0].value = today_formatted;
+    dateInputs[1].value = today_formatted;
+  }
+
+  // Handle search button
+  const searchBtn = document.querySelector('.search-btn');
+  if (searchBtn) {
+    searchBtn.addEventListener('click', function() {
+      alert('Chức năng tìm kiếm đang được phát triển');
+    });
+  }
+
+  // Handle login button
+  const loginBtn = document.querySelector('.login-btn');
+  if (loginBtn) {
+    loginBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      alert('Trang đăng nhập');
+    });
+  }
+}
+
+function updateDateInfo() {
+  const today = new Date();
+  const days = ['Chủ Nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'];
+  const dayName = days[today.getDay()];
+  const dateStr = `${dayName} ngày ${String(today.getDate()).padStart(2, '0')}/${String(today.getMonth() + 1).padStart(2, '0')}/${today.getFullYear()}`;
+  
+  const dateInfo = document.querySelector('.date-info');
+  if (dateInfo) {
+    dateInfo.textContent = `Hôm nay: ${dateStr}`;
+  }
+}
+
 const MT_SCHEDULE = {
   0: ['Khánh Hoà', 'Đà Nẵng'],        // Sunday
   1: ['Thừa Thiên Huế', 'Phú Yên'],   // Monday
