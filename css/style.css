@@ -1072,7 +1072,6 @@ body {
 
   .result-numbers {
     width: 100%;
-    justify-content: flex-start;
     gap: 8px;
     justify-items: center;
   }
@@ -1080,7 +1079,6 @@ body {
   .result-numbers .number {
     font-size: 13px;
     padding: 4px 8px;
-    background: var(--light-yellow);
     border-radius: 3px;
   }
 
@@ -1088,7 +1086,7 @@ body {
     color: var(--primary-red);
     font-size: 16px;
     padding: 6px 10px;
-    background: var(--light-yellow);
+
   }
 
   /* Sidebar sections */
