@@ -7,6 +7,51 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function initializeInterface() {
+  // Initialize mobile menu toggle
+  const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+  const navContainer = document.getElementById('navContainer');
+  const body = document.body;
+  
+  if (mobileMenuBtn && navContainer) {
+    mobileMenuBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      navContainer.classList.toggle('active');
+      body.classList.toggle('menu-open');
+      mobileMenuBtn.classList.toggle('active');
+    });
+
+    // Close menu when a nav item is clicked
+    const navItems = document.querySelectorAll('.nav-item');
+    navItems.forEach(item => {
+      item.addEventListener('click', function() {
+        navContainer.classList.remove('active');
+        body.classList.remove('menu-open');
+        mobileMenuBtn.classList.remove('active');
+      });
+    });
+
+    // Close menu when clicking on overlay (anywhere outside the nav)
+    body.addEventListener('click', function(event) {
+      const isClickInsideNav = navContainer.contains(event.target);
+      const isClickInsideBtn = mobileMenuBtn.contains(event.target);
+      
+      if (!isClickInsideNav && !isClickInsideBtn && navContainer.classList.contains('active')) {
+        navContainer.classList.remove('active');
+        body.classList.remove('menu-open');
+        mobileMenuBtn.classList.remove('active');
+      }
+    });
+
+    // Close menu on escape key
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape' && navContainer.classList.contains('active')) {
+        navContainer.classList.remove('active');
+        body.classList.remove('menu-open');
+        mobileMenuBtn.classList.remove('active');
+      }
+    });
+  }
+
   // Initialize day tabs
   const dayTabs = document.querySelectorAll('.day-tab');
   dayTabs.forEach((tab, index) => {
