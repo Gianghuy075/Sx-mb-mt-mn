@@ -910,13 +910,15 @@ body {
   }
 
   .mobile-menu-toggle {
-    display: block;
+    display: block !important;
     color: var(--primary-red);
     background: transparent;
     margin-left: auto;
-    padding: 8px 10px;
+    padding: 6px 6px;
     font-size: 22px;
     flex-shrink: 0;
+    width: auto;
+    min-width: unset;
   }
 
   .mobile-menu-toggle:hover {
