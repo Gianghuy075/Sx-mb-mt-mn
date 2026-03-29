@@ -3,6 +3,7 @@
  * Shows tabs for different days/regions
  */
 
+
 'use client';
 
 import type { Region } from '@/lib/types/lottery';
