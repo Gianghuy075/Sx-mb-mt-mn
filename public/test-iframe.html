@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Iframe - Xoso.com.vn</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        h1 {
+            color: #c0392b;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            margin: 30px 0 16px 0;
+            color: #333;
+            font-size: 20px;
+        }
+
+        .url-input {
+            margin-bottom: 30px;
+        }
+
+        .url-input label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .url-input input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        .iframe-container {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 40px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        iframe {
+            border: none;
+            display: block;
+            width: 100%;
+        }
+
+        .responsive-wrapper {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+        }
+
+        .responsive-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .container-limited {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .info-box {
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+            line-height: 1.8;
+        }
+
+        .info-box.success {
+            background-color: #e8f5e9;
+            border: 2px solid #4caf50;
+            color: #2e7d32;
+        }
+
+        .info-box.warning {
+            background-color: #fff3cd;
+            border: 2px solid #ffc107;
+            color: #856404;
+        }
+
+        .info-box.info {
+            background-color: #e3f2fd;
+            border: 2px solid #2196f3;
+            color: #1565c0;
+        }
+
+        .info-box h3 {
+            margin-bottom: 12px;
+        }
+
+        .info-box ul {
+            margin-left: 20px;
+        }
+
+        .info-box li {
+            margin: 8px 0;
+        }
+
+        .error-example {
+            background-color: #263238;
+            color: #ff5252;
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 13px;
+            overflow: auto;
+            margin: 12px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        button {
+            background-color: #c0392b;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+
+        button:hover {
+            background-color: #8b0000;
+        }
+
+        .button-group {
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎯 Test Nhúng Iframe - Xoso.com.vn</h1>
+
+    <div class="url-input">
+        <label for="urlInput">URL để nhúng:</label>
+        <input
+            type="text"
+            id="urlInput"
+            value="https://xoso.com.vn/xo-so-mien-bac/xsmb-p1.html"
+            placeholder="Nhập URL..."
+        >
+    </div>
+
+    <div class="button-group">
+        <button onclick="updateAllIframes()">🔄 Cập nhật tất cả iframe</button>
+        <button onclick="openInNewTab()">🔗 Mở trong tab mới</button>
+    </div>
+
+    <!-- Test 1 -->
+    <h2>1. Iframe cơ bản (800px height)</h2>
+    <div class="iframe-container">
+        <iframe id="iframe1" height="800"></iframe>
+    </div>
+
+    <!-- Test 2 -->
+    <h2>2. Iframe cao hơn (1200px height)</h2>
+    <div class="iframe-container">
+        <iframe id="iframe2" height="1200"></iframe>
+    </div>
+
+    <!-- Test 3 -->
+    <h2>3. Iframe responsive (tỷ lệ 16:9)</h2>
+    <div class="iframe-container responsive-wrapper">
+        <iframe id="iframe3"></iframe>
+    </div>
+
+    <!-- Test 4 -->
+    <h2>4. Iframe với scrolling (600px height)</h2>
+    <div class="iframe-container">
+        <iframe id="iframe4" height="600" scrolling="yes"></iframe>
+    </div>
+
+    <!-- Test 5 -->
+    <h2>5. Iframe trong container giới hạn (max-width: 900px)</h2>
+    <div class="container-limited">
+        <div class="iframe-container">
+            <iframe id="iframe5" height="800"></iframe>
+        </div>
+    </div>
+
+    <!-- Success box -->
+    <div class="info-box success">
+        <h3>✅ Điều cần kiểm tra:</h3>
+        <ul>
+            <li>Iframe có hiển thị nội dung không? (hay chỉ hiển thị trắng)</li>
+            <li>Có thể scroll trong iframe không?</li>
+            <li>Có thông báo lỗi nào trong Console không? (F12)</li>
+            <li>Link trong iframe có hoạt động không?</li>
+            <li>Tốc độ load có nhanh không?</li>
+            <li>Responsive trên mobile có OK không?</li>
+        </ul>
+    </div>
+
+    <!-- Warning box -->
+    <div class="info-box warning">
+        <h3>⚠️ Nếu iframe KHÔNG hoạt động:</h3>
+        <ul>
+            <li><strong>Nguyên nhân:</strong> Website chặn embed qua <code>X-Frame-Options</code> hoặc <code>Content-Security-Policy</code></li>
+            <li><strong>Giải pháp 1:</strong> Sử dụng API chính thức của xoso.com.vn (nếu có)</li>
+            <li><strong>Giải pháp 2:</strong> Tiếp tục dùng xsapi.vn như hiện tại</li>
+            <li><strong>Giải pháp 3:</strong> Tự crawl dữ liệu (cần xin phép website)</li>
+        </ul>
+    </div>
+
+    <!-- Console check -->
+    <div class="info-box info">
+        <h3>🔍 Kiểm tra Console:</h3>
+        <p>Nhấn <strong>F12</strong> và xem Console có lỗi kiểu này không:</p>
+        <div class="error-example">
+Refused to display 'https://xoso.com.vn/...' in a frame
+because it set 'X-Frame-Options' to 'SAMEORIGIN'.
+        </div>
+        <p>↑ Nếu thấy lỗi này = Website đã chặn embed</p>
+    </div>
+
+    <script>
+        // Load iframe URLs on page load
+        function updateAllIframes() {
+            const url = document.getElementById('urlInput').value;
+            if (!url) {
+                alert('Vui lòng nhập URL');
+                return;
+            }
+
+            const iframes = ['iframe1', 'iframe2', 'iframe3', 'iframe4', 'iframe5'];
+            iframes.forEach(id => {
+                const iframe = document.getElementById(id);
+                iframe.src = url;
+            });
+
+            console.log('✅ Đã cập nhật tất cả iframe với URL:', url);
+        }
+
+        function openInNewTab() {
+            const url = document.getElementById('urlInput').value;
+            if (url) {
+                window.open(url, '_blank');
+            }
+        }
+
+        // Auto-load on page load
+        window.onload = function() {
+            updateAllIframes();
+            console.log('🎯 Trang test iframe đã load');
+            console.log('📋 Mở Console (F12) để xem có lỗi gì không');
+        };
+
+        // Monitor iframe load errors
+        document.querySelectorAll('iframe').forEach((iframe, index) => {
+            iframe.addEventListener('load', () => {
+                console.log(`✅ Iframe ${index + 1} đã load thành công`);
+            });
+
+            iframe.addEventListener('error', () => {
+                console.error(`❌ Iframe ${index + 1} load thất bại`);
+            });
+        });
+    </script>
+</body>
+</html>

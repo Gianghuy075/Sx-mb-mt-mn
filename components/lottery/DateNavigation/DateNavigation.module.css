@@ -1,0 +1,70 @@
+/* Date Navigation */
+.dateNav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 18px 0 12px;
+  flex-wrap: wrap;
+}
+
+.dateBtn {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: var(--shadow);
+  color: var(--text-dark);
+  font-weight: 500;
+}
+
+.dateBtn:hover {
+  background: #eee;
+}
+
+.dateBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.todayBtn {
+  background: var(--red);
+  color: var(--white);
+  border-color: var(--red);
+  font-weight: 600;
+}
+
+.todayBtn:hover:not(:disabled) {
+  background: var(--red-dark);
+  border-color: var(--red-dark);
+}
+
+.datePicker {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 0.95rem;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  color: var(--text-dark);
+}
+
+@media (max-width: 480px) {
+  .dateNav {
+    gap: 8px;
+    padding: 12px 0 10px;
+  }
+
+  .dateBtn {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+  }
+
+  .datePicker {
+    width: 100%;
+    max-width: 200px;
+  }
+}

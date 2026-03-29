@@ -1,0 +1,140 @@
+/* Header */
+.siteHeader {
+  background: linear-gradient(to right, #f0d547 0%, #fffacd 100%);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.headerTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.logoSection {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.siteName {
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--primary-red);
+}
+
+.taglineHeader {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-left: 5px;
+}
+
+.headerInfo {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-size: 12px;
+}
+
+.dateInfo {
+  color: var(--text-muted);
+}
+
+.loginBtn {
+  color: var(--primary-red);
+  text-decoration: none;
+  font-weight: bold;
+  border: 1px solid var(--primary-red);
+  padding: 4px 10px;
+  border-radius: 3px;
+  transition: all 0.2s;
+}
+
+.loginBtn:hover {
+  background: var(--primary-red);
+  color: var(--white);
+}
+
+.mobileMenuToggle {
+  display: none;
+  background: transparent;
+  border: none;
+  color: var(--primary-red);
+  font-size: 24px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-weight: bold;
+  border-radius: 4px;
+  margin-left: auto;
+  transition: background 0.2s;
+}
+
+.mobileMenuToggle:hover {
+  background: rgba(0,0,0,0.1);
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .headerInfo {
+    display: none;
+  }
+
+  .mobileMenuToggle {
+    display: block;
+  }
+
+  .taglineHeader {
+    display: none;
+  }
+
+  .siteName {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .headerTop {
+    padding: 10px 12px;
+    gap: 8px;
+    flex-wrap: nowrap;
+  }
+
+  .logoSection {
+    flex-direction: column;
+    gap: 2px;
+    width: auto;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .siteName {
+    font-size: 16px;
+    line-height: 1.2;
+  }
+
+  .taglineHeader {
+    font-size: 9px;
+    margin-left: 0;
+    line-height: 1.2;
+  }
+
+  .headerInfo {
+    display: none !important;
+  }
+
+  .mobileMenuToggle {
+    display: block !important;
+    padding: 6px;
+    font-size: 22px;
+    flex-shrink: 0;
+    width: auto;
+    min-width: unset;
+  }
+
+  .mobileMenuToggle:hover {
+    background: rgba(192, 57, 43, 0.1);
+  }
+}

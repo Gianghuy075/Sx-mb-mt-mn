@@ -1,0 +1,93 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  admin
+  editor
+}
+
+enum ArticleStatus {
+  draft
+  published
+  archived
+}
+
+model User {
+  id           String    @id @default(cuid())
+  username     String    @unique @db.VarChar(100)
+  passwordHash String    @map("password_hash") @db.VarChar(255)
+  email        String    @unique @db.VarChar(255)
+  name         String?   @db.VarChar(255)
+  role         UserRole  @default(editor)
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  articles     Article[]
+  sessions     Session[]
+
+  @@index([username])
+  @@index([email])
+  @@map("users")
+}
+
+model Article {
+  id            String         @id @default(cuid())
+  title         String         @db.VarChar(500)
+  slug          String         @unique @db.VarChar(500)
+  content       String         @db.LongText
+  excerpt       String?        @db.Text
+  featuredImage String?        @map("featured_image") @db.VarChar(500)
+  authorId      String         @map("author_id")
+  status        ArticleStatus  @default(draft)
+  publishedAt   DateTime?      @map("published_at")
+  views         Int            @default(0)
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+
+  author        User           @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([slug])
+  @@index([status])
+  @@index([publishedAt])
+  @@index([authorId])
+  @@map("articles")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique @map("session_token") @db.VarChar(255)
+  userId       String   @map("user_id")
+  expires      DateTime
+
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([sessionToken])
+  @@index([userId])
+  @@map("sessions")
+}
+
+model LotteryCache {
+  id          String   @id @default(cuid())
+  cacheKey    String   @unique @map("cache_key") @db.VarChar(255)
+  region      String   @db.VarChar(10)
+  dataType    String   @map("data_type") @db.VarChar(50)
+  date        String?  @db.VarChar(20)
+  data        String   @db.LongText
+  expiresAt   DateTime @map("expires_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@index([cacheKey])
+  @@index([region, dataType, date])
+  @@index([expiresAt])
+  @@map("lottery_cache")
+}

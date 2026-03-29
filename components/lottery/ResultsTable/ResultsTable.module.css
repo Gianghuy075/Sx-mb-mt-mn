@@ -1,0 +1,259 @@
+/* Results Section */
+.resultsSection {
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-radius: 4px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.sectionTitle {
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--primary-red);
+  margin-bottom: 10px;
+  background: var(--light-yellow);
+  padding: 10px;
+  border-radius: 3px;
+}
+
+.resultsInfo {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 15px;
+  padding: 5px 0;
+}
+
+.infoLink a {
+  color: var(--primary-red);
+  text-decoration: none;
+}
+
+.infoLink a:hover {
+  text-decoration: underline;
+}
+
+/* Results List */
+.resultsList {
+  display: flex;
+  flex-direction: column;
+}
+
+.resultRow {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid var(--border-light);
+  min-height: 50px;
+}
+
+.resultRow:last-child {
+  border-bottom: none;
+}
+
+.resultLabel {
+  width: 140px;
+  font-weight: bold;
+  font-size: 13px;
+  flex-shrink: 0;
+  text-transform: uppercase;
+}
+
+.resultNumbers {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.number {
+  font-weight: bold;
+  color: var(--text-dark);
+  font-size: 16px;
+}
+
+.number.large {
+  color: var(--primary-red);
+  font-size: 24px;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+/* Province Grid for MT/MN */
+.provinceGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.lotteryTableWrap {
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 15px;
+}
+
+.lotteryTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.lotteryTable caption {
+  background: var(--light-yellow);
+  padding: 10px;
+  font-weight: bold;
+  color: var(--primary-red);
+  font-size: 14px;
+  text-align: center;
+  border-bottom: 1px solid var(--table-border);
+}
+
+/* Province Headers (Đà Nẵng, Quảng Ngãi, etc.) */
+.lotteryTable thead tr {
+  background: var(--light-yellow);
+  border-bottom: 2px solid var(--table-border);
+}
+
+.provinceHeader {
+  background: var(--light-yellow);
+  padding: 12px 8px;
+  font-weight: bold;
+  font-size: 14px;
+  text-align: center;
+  color: var(--primary-red);
+  border-right: 1px solid var(--border-light);
+  border-bottom: 2px solid var(--table-border);
+}
+
+.provinceHeader:last-child {
+  border-right: none;
+}
+
+/* Prize Header (G column) */
+.prizeHeader {
+  background: var(--light-yellow);
+  padding: 12px 8px;
+  font-weight: bold;
+  font-size: 14px;
+  text-align: center;
+  color: var(--text-dark);
+  width: 60px;
+  border-right: 1px solid var(--border-light);
+  border-bottom: 2px solid var(--table-border);
+}
+
+/* Prize Label (8, 7, 6, etc.) */
+.prizeLabel {
+  background: #f0f0f0;
+  padding: 10px 8px;
+  font-weight: bold;
+  font-size: 13px;
+  text-align: center;
+  width: 60px;
+  border-right: 1px solid var(--border-light);
+}
+
+.lotteryTable tbody tr {
+  border-bottom: 1px solid var(--border-light);
+}
+
+.lotteryTable tbody tr:last-child {
+  border-bottom: none;
+}
+
+.lotteryTable th {
+  background: #f0f0f0;
+  padding: 10px 8px;
+  font-weight: bold;
+  font-size: 12px;
+  text-align: left;
+  width: 120px;
+  border-right: 1px solid var(--border-light);
+}
+
+.lotteryTable td {
+  padding: 10px 8px;
+  text-align: center;
+  border-right: 1px solid var(--border-light);
+}
+
+.lotteryTable td:last-child {
+  border-right: none;
+}
+
+.prizeNumbers {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.prizeNum {
+  font-weight: bold;
+  color: var(--text-dark);
+  font-size: 14px;
+  padding: 4px 8px;
+}
+
+/* Special styling for prize tiers */
+.lotteryTable .special td {
+  background: #fff9e6;
+}
+
+.lotteryTable .special .prizeNum {
+  color: var(--primary-red);
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.lotteryTable .first .prizeNum {
+  color: var(--primary-red);
+  font-size: 16px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .resultRow {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 12px 15px;
+  }
+
+  .resultLabel {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .resultNumbers {
+    justify-content: flex-start;
+    gap: 12px;
+  }
+
+  .provinceGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .provinceHeader {
+    font-size: 12px;
+    padding: 8px 4px;
+  }
+
+  .prizeLabel {
+    font-size: 12px;
+    padding: 8px 4px;
+  }
+
+  .lotteryTable td {
+    padding: 8px 4px;
+    font-size: 13px;
+  }
+
+  .prizeNum {
+    font-size: 12px;
+    padding: 2px 4px;
+  }
+}
