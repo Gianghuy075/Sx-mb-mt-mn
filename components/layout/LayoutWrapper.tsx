@@ -13,16 +13,18 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
   const pathname = usePathname();
 
   // Pages that should NOT show header/footer
-  const isEmbedPage = pathname === '/minh-ngoc';
+  // Admin panel and login page have their own layouts
+  const isAdminPage = pathname?.startsWith('/admin');
+  const isLoginPage = pathname === '/login';
+  const shouldSkipLayout = isAdminPage || isLoginPage;
 
-  if (isEmbedPage) {
+  if (shouldSkipLayout) {
     return <>{children}</>;
   }
 
   return (
     <>
       <Header />
-      <Navigation />
       {children}
       <Footer />
     </>

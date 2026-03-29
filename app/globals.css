@@ -172,6 +172,7 @@ table {
   color: var(--text-muted);
 }
 
+.news-btn,
 .login-btn {
   color: var(--primary-red);
   text-decoration: none;
@@ -182,6 +183,7 @@ table {
   transition: all 0.2s;
 }
 
+.news-btn:hover,
 .login-btn:hover {
   background: var(--primary-red);
   color: var(--white);

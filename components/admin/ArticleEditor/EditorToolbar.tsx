@@ -76,6 +76,7 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
       {/* Text Formatting */}
       <div className={styles.toolbarGroup}>
         <button
+          type="button"
           onClick={() => editor.chain().focus().toggleBold().run()}
           className={`${styles.toolbarButton} ${editor.isActive('bold') ? styles.active : ''}`}
           title="Bold (Ctrl+B)"
@@ -83,6 +84,7 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
           <strong>B</strong>
         </button>
         <button
+          type="button"
           onClick={() => editor.chain().focus().toggleItalic().run()}
           className={`${styles.toolbarButton} ${editor.isActive('italic') ? styles.active : ''}`}
           title="Italic (Ctrl+I)"
@@ -90,6 +92,7 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
           <em>I</em>
         </button>
         <button
+          type="button"
           onClick={() => editor.chain().focus().toggleUnderline().run()}
           className={`${styles.toolbarButton} ${editor.isActive('underline') ? styles.active : ''}`}
           title="Underline (Ctrl+U)"
@@ -97,6 +100,7 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
           <u>U</u>
         </button>
         <button
+          type="button"
           onClick={() => editor.chain().focus().toggleStrike().run()}
           className={`${styles.toolbarButton} ${editor.isActive('strike') ? styles.active : ''}`}
           title="Strikethrough"
@@ -108,6 +112,7 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
       {/* Headings */}
       <div className={styles.toolbarGroup}>
         <button
+          type="button"
           onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
           className={`${styles.toolbarButton} ${editor.isActive('heading', { level: 1 }) ? styles.active : ''}`}
           title="Heading 1"
@@ -115,6 +120,7 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
           H1
         </button>
         <button
+          type="button"
           onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
           className={`${styles.toolbarButton} ${editor.isActive('heading', { level: 2 }) ? styles.active : ''}`}
           title="Heading 2"
@@ -122,6 +128,7 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
           H2
         </button>
         <button
+          type="button"
           onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
           className={`${styles.toolbarButton} ${editor.isActive('heading', { level: 3 }) ? styles.active : ''}`}
           title="Heading 3"
@@ -133,6 +140,7 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
       {/* Lists */}
       <div className={styles.toolbarGroup}>
         <button
+          type="button"
           onClick={() => editor.chain().focus().toggleBulletList().run()}
           className={`${styles.toolbarButton} ${editor.isActive('bulletList') ? styles.active : ''}`}
           title="Bullet List"
@@ -140,6 +148,7 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
           •
         </button>
         <button
+          type="button"
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
           className={`${styles.toolbarButton} ${editor.isActive('orderedList') ? styles.active : ''}`}
           title="Numbered List"
@@ -151,6 +160,7 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
       {/* Alignment */}
       <div className={styles.toolbarGroup}>
         <button
+          type="button"
           onClick={() => editor.chain().focus().setTextAlign('left').run()}
           className={`${styles.toolbarButton} ${editor.isActive({ textAlign: 'left' }) ? styles.active : ''}`}
           title="Align Left"
@@ -158,6 +168,7 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
           ⬅
         </button>
         <button
+          type="button"
           onClick={() => editor.chain().focus().setTextAlign('center').run()}
           className={`${styles.toolbarButton} ${editor.isActive({ textAlign: 'center' }) ? styles.active : ''}`}
           title="Align Center"
@@ -165,6 +176,7 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
           ⬌
         </button>
         <button
+          type="button"
           onClick={() => editor.chain().focus().setTextAlign('right').run()}
           className={`${styles.toolbarButton} ${editor.isActive({ textAlign: 'right' }) ? styles.active : ''}`}
           title="Align Right"
@@ -176,23 +188,25 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
       {/* Insert */}
       <div className={styles.toolbarGroup}>
         <button
+          type="button"
           onClick={() => setShowLinkDialog(true)}
           className={styles.toolbarButton}
           title="Insert Link"
         >
           🔗
         </button>
-        <button onClick={addImage} className={styles.toolbarButton} title="Upload Image">
+        <button type="button" onClick={addImage} className={styles.toolbarButton} title="Upload Image">
           🖼️
         </button>
         <button
+          type="button"
           onClick={() => setShowImageDialog(true)}
           className={styles.toolbarButton}
           title="Insert Image URL"
         >
           📷
         </button>
-        <button onClick={insertTable} className={styles.toolbarButton} title="Insert Table">
+        <button type="button" onClick={insertTable} className={styles.toolbarButton} title="Insert Table">
           ⊞
         </button>
       </div>
@@ -207,10 +221,10 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
             onChange={(e) => setLinkUrl(e.target.value)}
             className={styles.dialogInput}
           />
-          <button onClick={addLink} className={styles.dialogButton}>
+          <button type="button" onClick={addLink} className={styles.dialogButton}>
             Add
           </button>
-          <button onClick={() => setShowLinkDialog(false)} className={styles.dialogButton}>
+          <button type="button" onClick={() => setShowLinkDialog(false)} className={styles.dialogButton}>
             Cancel
           </button>
         </div>
@@ -226,10 +240,10 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
             onChange={(e) => setImageUrl(e.target.value)}
             className={styles.dialogInput}
           />
-          <button onClick={addImageFromUrl} className={styles.dialogButton}>
+          <button type="button" onClick={addImageFromUrl} className={styles.dialogButton}>
             Add
           </button>
-          <button onClick={() => setShowImageDialog(false)} className={styles.dialogButton}>
+          <button type="button" onClick={() => setShowImageDialog(false)} className={styles.dialogButton}>
             Cancel
           </button>
         </div>

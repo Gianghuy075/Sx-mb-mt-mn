@@ -7,6 +7,7 @@
 import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
 import ArticleEditor from '@/components/admin/ArticleEditor/ArticleEditor';
+import ImageUploadInput from '@/components/admin/ArticleEditor/ImageUploadInput';
 import type { Article } from '@/lib/types/article';
 import styles from '../new/page.module.css';
 
@@ -160,22 +161,11 @@ export default function EditArticlePage({ params }: PageProps) {
           />
         </div>
 
-        <div className={styles.formGroup}>
-          <label htmlFor="featuredImage" className={styles.label}>
-            Ảnh đại diện (URL)
-          </label>
-          <input
-            type="url"
-            id="featuredImage"
-            value={featuredImage}
-            onChange={(e) => setFeaturedImage(e.target.value)}
-            className={styles.input}
-            placeholder="https://example.com/image.jpg"
-          />
-          {featuredImage && (
-            <img src={featuredImage} alt="Preview" className={styles.imagePreview} />
-          )}
-        </div>
+        <ImageUploadInput
+          label="Ảnh đại diện"
+          value={featuredImage}
+          onChange={setFeaturedImage}
+        />
 
         <div className={styles.formGroup}>
           <label className={styles.label}>

@@ -5,7 +5,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
+import { getServerSession } from 'next-auth/next';
 import { authConfig } from '@/lib/auth/auth';
 import { prisma } from '@/lib/db/prisma';
 import { createArticleSchema, articleListFiltersSchema } from '@/lib/validations/article';

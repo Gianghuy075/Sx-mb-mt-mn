@@ -1,9 +1,11 @@
 /**
- * TipTap Rich Text Editor Component
+ * Article Content Renderer
+ * Renders TipTap JSON content as HTML
  */
 
 'use client';
 
+import { useMemo } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Link from '@tiptap/extension-link';
@@ -14,15 +16,22 @@ import TableCell from '@tiptap/extension-table-cell';
 import TableHeader from '@tiptap/extension-table-header';
 import TextAlign from '@tiptap/extension-text-align';
 import Underline from '@tiptap/extension-underline';
-import EditorToolbar from './EditorToolbar';
-import styles from './ArticleEditor.module.css';
 
-interface ArticleEditorProps {
+interface ArticleContentProps {
   content: string;
-  onChange: (content: string) => void;
+  className?: string;
 }
 
-export default function ArticleEditor({ content, onChange }: ArticleEditorProps) {
+export default function ArticleContent({ content, className }: ArticleContentProps) {
+  // Try to parse JSON content
+  const parsedContent = useMemo(() => {
+    try {
+      return JSON.parse(content);
+    } catch (error) {
+      return null;
+    }
+  }, [content]);
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -31,22 +40,10 @@ export default function ArticleEditor({ content, onChange }: ArticleEditorProps)
         },
       }),
       Link.configure({
-        openOnClick: false,
-        HTMLAttributes: {
-          class: 'editor-link',
-        },
+        openOnClick: true,
       }),
-      Image.configure({
-        HTMLAttributes: {
-          class: 'editor-image',
-        },
-      }),
-      Table.configure({
-        resizable: true,
-        HTMLAttributes: {
-          class: 'editor-table',
-        },
-      }),
+      Image,
+      Table,
       TableRow,
       TableCell,
       TableHeader,
@@ -55,25 +52,23 @@ export default function ArticleEditor({ content, onChange }: ArticleEditorProps)
       }),
       Underline,
     ],
-    content,
+    content: parsedContent,
+    editable: false,
     immediatelyRender: false,
-    onUpdate: ({ editor }) => {
-      onChange(editor.getJSON() as any);
-    },
-    editorProps: {
-      attributes: {
-        class: styles.editorContent,
-      },
-    },
   });
 
+  // If content is not JSON, render as HTML string
+  if (!parsedContent) {
+    return <div className={className} dangerouslySetInnerHTML={{ __html: content }} />;
+  }
+
+  // If editor is not ready yet, return null (will render on next cycle)
   if (!editor) {
     return null;
   }
 
   return (
-    <div className={styles.editor}>
-      <EditorToolbar editor={editor} />
+    <div className={className}>
       <EditorContent editor={editor} />
     </div>
   );

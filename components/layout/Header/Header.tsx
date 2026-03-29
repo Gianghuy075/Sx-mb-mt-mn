@@ -4,6 +4,7 @@
 
 'use client';
 
+import Link from 'next/link';
 import { getTodayString, formatFullDateVN } from '@/lib/utils/dates';
 
 export default function Header() {
@@ -19,9 +20,12 @@ export default function Header() {
         </div>
         <div className="header-info">
           <span className="date-info">Hôm nay: {dateDisplay}</span>
-          <a href="#" className="login-btn">
+          <Link href="/tin-tuc" className="news-btn">
+            Tin tức
+          </Link>
+          <Link href="/login" className="login-btn">
             Đăng nhập
-          </a>
+          </Link>
         </div>
         <button className="mobile-menu-toggle" id="mobileMenuBtn">
           ☰

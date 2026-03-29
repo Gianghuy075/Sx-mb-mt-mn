@@ -1,0 +1,154 @@
+/* Image Upload Input Styles */
+
+.container {
+  margin-bottom: 24px;
+}
+
+.label {
+  display: block;
+  font-weight: 600;
+  font-size: 15px;
+  color: #374151;
+  margin-bottom: 8px;
+}
+
+.required {
+  color: var(--primary-red, #c0392b);
+  margin-left: 4px;
+}
+
+.hiddenInput {
+  display: none;
+}
+
+/* Upload Button */
+.uploadButton {
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--primary-red, #c0392b);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.uploadButton:hover {
+  background: var(--red-dark, #8b0000);
+}
+
+/* Uploading State */
+.uploadingState {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #f0f9ff;
+  border: 2px solid #3b82f6;
+  border-radius: 6px;
+  color: #1e40af;
+  font-size: 15px;
+}
+
+.spinner {
+  font-size: 20px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Error State */
+.errorState {
+  padding: 12px 16px;
+  background: #fef2f2;
+  border: 2px solid #ef4444;
+  border-radius: 6px;
+}
+
+.errorMessage {
+  color: #dc2626;
+  font-size: 14px;
+  margin: 0 0 12px 0;
+}
+
+.retryButton {
+  padding: 8px 16px;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.retryButton:hover {
+  background: #dc2626;
+}
+
+/* Success State */
+.successState {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.preview {
+  max-width: 300px;
+  max-height: 200px;
+  border-radius: 6px;
+  border: 2px solid #ddd;
+  object-fit: cover;
+}
+
+.fileInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 14px;
+  color: #10b981;
+}
+
+.filename {
+  font-weight: 600;
+}
+
+.fileSize {
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.changeButton {
+  align-self: flex-start;
+  padding: 8px 16px;
+  background: #f3f4f6;
+  color: #374151;
+  border: 2px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.changeButton:hover {
+  background: #e5e7eb;
+  border-color: #9ca3af;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .preview {
+    max-width: 100%;
+  }
+}

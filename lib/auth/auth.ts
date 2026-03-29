@@ -3,12 +3,12 @@
  * Handles authentication with credentials provider
  */
 
-import { NextAuthConfig } from 'next-auth';
+import type { AuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from 'bcrypt';
 import { prisma } from '@/lib/db/prisma';
 
-export const authConfig: NextAuthConfig = {
+export const authConfig: AuthOptions = {
   providers: [
     CredentialsProvider({
       name: 'Credentials',
@@ -57,7 +57,7 @@ export const authConfig: NextAuthConfig = {
     }),
   ],
   pages: {
-    signIn: '/admin/login',
+    signIn: '/login',
   },
   callbacks: {
     async jwt({ token, user }) {

@@ -9,8 +9,8 @@ import { getToken } from 'next-auth/jwt';
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Allow access to login page
-  if (pathname === '/admin/login') {
+  // Skip middleware for NextAuth routes and login page
+  if (pathname === '/login' || pathname.startsWith('/api/auth')) {
     return NextResponse.next();
   }
 
@@ -22,7 +22,7 @@ export async function middleware(request: NextRequest) {
     });
 
     if (!token) {
-      const url = new URL('/admin/login', request.url);
+      const url = new URL('/login', request.url);
       url.searchParams.set('callbackUrl', pathname);
       return NextResponse.redirect(url);
     }

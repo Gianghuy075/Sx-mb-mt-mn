@@ -244,7 +244,7 @@ export class CacheService {
       });
 
       const now = Date.now();
-      const totalAge = entries.reduce((sum, entry) => {
+      const totalAge = entries.reduce((sum: number, entry: { createdAt: Date }) => {
         return sum + (now - entry.createdAt.getTime());
       }, 0);
 

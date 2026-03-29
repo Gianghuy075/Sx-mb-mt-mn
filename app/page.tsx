@@ -1,10 +1,24 @@
 /**
- * Home Page
- * Redirects to /mb/today
+ * Home Page - Minh Ngoc Embedded
  */
 
-import { redirect } from 'next/navigation';
+'use client';
 
 export default function HomePage() {
-  redirect('/mb/today');
+  return (
+    <div style={{ width: '100%', height: 'calc(100vh - 120px)' }}>
+      <iframe
+        src="https://www.minhngoc.net.vn/free/index.php"
+        style={{
+          width: '100%',
+          height: '100%',
+          border: 'none',
+          display: 'block'
+        }}
+        title="Minh Ngọc - Kết quả Xổ số"
+        id="iframe_xosominhngoc"
+        name="iframe_xosominhngoc"
+      />
+    </div>
+  );
 }

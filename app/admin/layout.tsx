@@ -17,9 +17,9 @@ export default async function AdminLayout({
 }) {
   const session = await getServerSession(authConfig);
 
-  // Redirect to login if not authenticated (extra safety layer)
+  // Redirect to login if not authenticated
   if (!session) {
-    redirect('/admin/login');
+    redirect('/login');
   }
 
   return (

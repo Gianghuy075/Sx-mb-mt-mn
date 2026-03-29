@@ -13,7 +13,18 @@ export const createArticleSchema = z.object({
     .max(500, 'Tiêu đề không được quá 500 ký tự'),
   content: z.string().min(1, 'Nội dung không được để trống'),
   excerpt: z.string().max(1000, 'Mô tả không được quá 1000 ký tự').optional(),
-  featuredImage: z.string().url('URL ảnh không hợp lệ').optional().or(z.literal('')),
+  featuredImage: z
+    .string()
+    .refine(
+      (val) =>
+        !val ||
+        val.startsWith('http://') ||
+        val.startsWith('https://') ||
+        val.startsWith('/'),
+      { message: 'URL ảnh không hợp lệ' }
+    )
+    .optional()
+    .or(z.literal('')),
   status: articleStatusEnum.optional().default('draft'),
 });
 
@@ -25,7 +36,18 @@ export const updateArticleSchema = z.object({
     .optional(),
   content: z.string().min(1, 'Nội dung không được để trống').optional(),
   excerpt: z.string().max(1000, 'Mô tả không được quá 1000 ký tự').optional(),
-  featuredImage: z.string().url('URL ảnh không hợp lệ').optional().or(z.literal('')),
+  featuredImage: z
+    .string()
+    .refine(
+      (val) =>
+        !val ||
+        val.startsWith('http://') ||
+        val.startsWith('https://') ||
+        val.startsWith('/'),
+      { message: 'URL ảnh không hợp lệ' }
+    )
+    .optional()
+    .or(z.literal('')),
   status: articleStatusEnum.optional(),
 });
 
