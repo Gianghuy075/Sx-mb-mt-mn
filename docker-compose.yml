@@ -24,12 +24,29 @@ services:
 
   # Nginx Reverse Proxy
   nginx:
-    image: nginx:alpine
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
     container_name: lottery-nginx
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/certs:/etc/nginx/ssl
+    command: >
+      /bin/sh -c "
+        if [ ! -f /etc/nginx/ssl/fullchain.pem ] || [ ! -f /etc/nginx/ssl/privkey.pem ]; then
+          echo 'Generating self-signed origin certificate (replace with Cloudflare Origin cert for production)';
+          mkdir -p /etc/nginx/ssl;
+          openssl req -x509 -nodes -days 3650 \
+            -subj '/CN=localhost' \
+            -newkey rsa:2048 \
+            -keyout /etc/nginx/ssl/privkey.pem \
+            -out /etc/nginx/ssl/fullchain.pem;
+        fi;
+        nginx -g 'daemon off;'
+      "
     depends_on:
       - nextjs
     restart: always
