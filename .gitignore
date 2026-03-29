@@ -2,9 +2,6 @@ node_modules
 # Keep environment variables out of version control
 .env
 
-# TLS certificates for nginx
-nginx/certs/*.pem
-
 /lib/generated/prisma
 node_modules
 .next

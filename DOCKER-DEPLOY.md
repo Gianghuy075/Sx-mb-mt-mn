@@ -77,21 +77,6 @@ docker compose logs nextjs
 docker compose logs nginx
 ```
 
-### Bật HTTPS cho Cloudflare (Full/Strict)
-
-1. Lấy chứng chỉ Cloudflare Origin hoặc Let's Encrypt:
-   - Lưu `fullchain.pem` và `privkey.pem` vào thư mục `nginx/certs/` (cùng cấp với nginx.conf).
-   - Nếu không cung cấp, container sẽ tự tạo self-signed cho chế độ **Full** (không dùng được với Strict).
-2. Mở port 443 đã cấu hình sẵn trong `docker-compose.yml`.
-3. Rebuild:
-
-```bash
-docker compose down
-docker compose up -d --build
-```
-
-4. Trên Cloudflare đặt SSL/TLS mode = **Full** (hoặc **Full (strict)** nếu cert hợp lệ) và bật lại proxy.
-
 ### 5. Truy cập ứng dụng
 
 - Trang chủ: `http://YOUR_SERVER_IP`
