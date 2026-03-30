@@ -10,9 +10,6 @@
     "lint": "next lint",
     "type-check": "tsc --noEmit"
   },
-  "prisma": {
-    "seed": "tsx prisma/seed.ts"
-  },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
     "@types/node": "^25.5.0",

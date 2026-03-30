@@ -107,7 +107,7 @@ export default function Frequency({ data, region }: FrequencyProps) {
               </div>
               <div className="frequency-value">
                 {item.frequency}
-                <span className="frequency-percent">({item.percentage.toFixed(1)}%)</span>
+                <span className="frequency-percent">({(item.percentage ?? 0).toFixed(1)}%)</span>
               </div>
             </div>
           );
