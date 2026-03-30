@@ -12,7 +12,7 @@ import {
   isValidXoSoAPIResponse,
   extractErrorMessage,
 } from '@/lib/data/xosoapi-normalizer';
-import { getTodayString } from '@/lib/utils/dates';
+import { getTodayString, getPreviousDate } from '@/lib/utils/dates';
 import { demoMB, demoMT, demoMN } from '@/lib/data/demoGenerator';
 
 /**
@@ -93,6 +93,18 @@ export async function getDraws(region: Region, date: string): Promise<LotteryDat
       date,
       limit: region === 'mb' ? 1 : undefined, // MB: 1 draw, MT/MN: all draws for date
     });
+
+    // If today's draw hasn't happened yet (API returns empty []), retry with yesterday
+    if (
+      response?.success === true &&
+      Array.isArray(response?.data) &&
+      response.data.length === 0 &&
+      date === getTodayString()
+    ) {
+      const yesterday = getPreviousDate(date);
+      console.log(`[Empty draws] Today (${date}) has no results yet, retrying with ${yesterday}`);
+      return await getDraws(region, yesterday);
+    }
 
     // Validate response
     if (!isValidXoSoAPIResponse(response)) {

@@ -17,7 +17,7 @@ const API_KEY = process.env.XOSOAPI_KEY || '';
 const createClient = (baseURL: string): AxiosInstance => {
   return axios.create({
     baseURL,
-    timeout: 10000,
+    timeout: 0,
     headers: {
       'X-API-Key': API_KEY,
       'Accept': 'application/json',
