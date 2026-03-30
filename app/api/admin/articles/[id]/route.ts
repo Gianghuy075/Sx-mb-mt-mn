@@ -7,8 +7,9 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
+import { ObjectId } from 'mongodb';
 import { authConfig } from '@/lib/auth/auth';
-import { prisma } from '@/lib/db/prisma';
+import { getDb } from '@/lib/db/mongodb';
 import { updateArticleSchema } from '@/lib/validations/article';
 import { generateUniqueSlug } from '@/lib/utils/slug';
 
@@ -16,7 +17,46 @@ interface RouteParams {
   params: Promise<{ id: string }>;
 }
 
-export async function GET(request: NextRequest, { params }: RouteParams) {
+async function getArticleWithAuthor(db: any, objectId: ObjectId) {
+  const docs = await db.collection('articles').aggregate([
+    { $match: { _id: objectId } },
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'author_id',
+        foreignField: '_id',
+        as: 'authorArr',
+      },
+    },
+  ]).toArray();
+
+  if (!docs[0]) return null;
+  const doc = docs[0];
+
+  return {
+    id: doc._id.toString(),
+    title: doc.title,
+    slug: doc.slug,
+    content: doc.content,
+    excerpt: doc.excerpt ?? null,
+    featuredImage: doc.featured_image ?? null,
+    status: doc.status,
+    publishedAt: doc.published_at ?? null,
+    views: doc.views ?? 0,
+    region: doc.region ?? null,
+    type: doc.type ?? null,
+    author: doc.authorArr?.[0]
+      ? {
+          id: doc.authorArr[0]._id.toString(),
+          username: doc.authorArr[0].username,
+          name: doc.authorArr[0].name ?? null,
+          email: doc.authorArr[0].email,
+        }
+      : null,
+  };
+}
+
+export async function GET(_request: NextRequest, { params }: RouteParams) {
   try {
     const session = await getServerSession(authConfig);
     if (!session) {
@@ -25,30 +65,15 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 
     const { id } = await params;
 
-    const article = await prisma.article.findUnique({
-      where: { id },
-      select: {
-        id: true,
-        title: true,
-        slug: true,
-        content: true,
-        excerpt: true,
-        featuredImage: true,
-        status: true,
-        publishedAt: true,
-        views: true,
-        region: true,
-        type: true,
-        author: {
-          select: {
-            id: true,
-            username: true,
-            name: true,
-            email: true,
-          },
-        },
-      },
-    });
+    let objectId: ObjectId;
+    try {
+      objectId = new ObjectId(id);
+    } catch {
+      return NextResponse.json({ error: 'Invalid article ID' }, { status: 400 });
+    }
+
+    const db = await getDb();
+    const article = await getArticleWithAuthor(db, objectId);
 
     if (!article) {
       return NextResponse.json({ error: 'Article not found' }, { status: 404 });
@@ -69,71 +94,53 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     }
 
     const { id } = await params;
+
+    let objectId: ObjectId;
+    try {
+      objectId = new ObjectId(id);
+    } catch {
+      return NextResponse.json({ error: 'Invalid article ID' }, { status: 400 });
+    }
+
     const body = await request.json();
     const data = updateArticleSchema.parse(body);
 
+    const db = await getDb();
+
     // Check if article exists
-    const existing = await prisma.article.findUnique({
-      where: { id },
-      select: { slug: true, status: true },
-    });
+    const existing = await db.collection('articles').findOne(
+      { _id: objectId },
+      { projection: { slug: 1, status: 1 } }
+    );
 
     if (!existing) {
       return NextResponse.json({ error: 'Article not found' }, { status: 404 });
     }
 
-    // Prepare update data
-    const updateData: any = {};
+    const setData: Record<string, any> = { updated_at: new Date() };
 
     if (data.title !== undefined) {
-      updateData.title = data.title;
-      // Regenerate slug if title changed
-      updateData.slug = await generateUniqueSlug(data.title, id);
+      setData.title = data.title;
+      setData.slug = await generateUniqueSlug(data.title, id);
     }
 
-    if (data.content !== undefined) {
-      updateData.content = data.content;
-    }
-
-    if (data.excerpt !== undefined) {
-      updateData.excerpt = data.excerpt || null;
-    }
-
-    if (data.featuredImage !== undefined) {
-      updateData.featuredImage = data.featuredImage || null;
-    }
+    if (data.content !== undefined) setData.content = data.content;
+    if (data.excerpt !== undefined) setData.excerpt = data.excerpt ?? null;
+    if (data.featuredImage !== undefined) setData.featured_image = data.featuredImage ?? null;
 
     if (data.status !== undefined) {
-      updateData.status = data.status;
-      // Set publishedAt when changing from draft to published
+      setData.status = data.status;
       if (existing.status !== 'published' && data.status === 'published') {
-        updateData.publishedAt = new Date();
+        setData.published_at = new Date();
       }
     }
 
-    if (data.region !== undefined) {
-      updateData.region = data.region || null;
-    }
+    if (data.region !== undefined) setData.region = data.region ?? null;
+    if (data.type !== undefined) setData.type = data.type ?? null;
 
-    if (data.type !== undefined) {
-      updateData.type = data.type || null;
-    }
+    await db.collection('articles').updateOne({ _id: objectId }, { $set: setData });
 
-    const article = await prisma.article.update({
-      where: { id },
-      data: updateData,
-      include: {
-        author: {
-          select: {
-            id: true,
-            username: true,
-            name: true,
-            email: true,
-          },
-        },
-      },
-    });
-
+    const article = await getArticleWithAuthor(db, objectId);
     return NextResponse.json(article);
   } catch (error: any) {
     console.error('Error updating article:', error);
@@ -149,7 +156,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: RouteParams) {
+export async function DELETE(_request: NextRequest, { params }: RouteParams) {
   try {
     const session = await getServerSession(authConfig);
     if (!session) {
@@ -158,11 +165,20 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
 
     const { id } = await params;
 
+    let objectId: ObjectId;
+    try {
+      objectId = new ObjectId(id);
+    } catch {
+      return NextResponse.json({ error: 'Invalid article ID' }, { status: 400 });
+    }
+
+    const db = await getDb();
+
     // Soft delete: set status to archived
-    await prisma.article.update({
-      where: { id },
-      data: { status: 'archived' },
-    });
+    await db.collection('articles').updateOne(
+      { _id: objectId },
+      { $set: { status: 'archived', updated_at: new Date() } }
+    );
 
     return NextResponse.json({ success: true });
   } catch (error) {

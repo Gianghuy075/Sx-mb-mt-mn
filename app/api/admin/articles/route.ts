@@ -6,9 +6,10 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
+import { ObjectId } from 'mongodb';
 import { authConfig } from '@/lib/auth/auth';
-import { prisma } from '@/lib/db/prisma';
-import { createArticleSchema, articleListFiltersSchema, articleRegionEnum, articleTypeEnum } from '@/lib/validations/article';
+import { getDb } from '@/lib/db/mongodb';
+import { createArticleSchema, articleListFiltersSchema } from '@/lib/validations/article';
 import { generateUniqueSlug } from '@/lib/utils/slug';
 
 export async function GET(request: NextRequest) {
@@ -28,57 +29,60 @@ export async function GET(request: NextRequest) {
       limit: searchParams.get('limit') || '10',
     });
 
-    const where: any = {};
+    const matchQuery: Record<string, any> = {};
 
-    if (filters.status) {
-      where.status = filters.status;
-    }
-
+    if (filters.status) matchQuery.status = filters.status;
+    if (filters.region) matchQuery.region = filters.region;
+    if (filters.type) matchQuery.type = filters.type;
     if (filters.search) {
-      where.OR = [
-        { title: { contains: filters.search } },
-        { excerpt: { contains: filters.search } },
+      matchQuery.$or = [
+        { title: { $regex: filters.search, $options: 'i' } },
+        { excerpt: { $regex: filters.search, $options: 'i' } },
       ];
     }
 
-    if (filters.region) {
-      where.region = filters.region;
-    }
+    const db = await getDb();
+    const skip = (filters.page - 1) * filters.limit;
 
-    if (filters.type) {
-      where.type = filters.type;
-    }
-
-    const [articles, total] = await Promise.all([
-      prisma.article.findMany({
-        where,
-        orderBy: { createdAt: 'desc' },
-        skip: (filters.page - 1) * filters.limit,
-        take: filters.limit,
-        select: {
-          id: true,
-          title: true,
-          slug: true,
-          content: true,
-          excerpt: true,
-          featuredImage: true,
-          status: true,
-          publishedAt: true,
-          views: true,
-          region: true,
-          type: true,
-          author: {
-            select: {
-              id: true,
-              username: true,
-              name: true,
-              email: true,
-            },
+    const [rawArticles, total] = await Promise.all([
+      db.collection('articles').aggregate([
+        { $match: matchQuery },
+        { $sort: { created_at: -1 } },
+        { $skip: skip },
+        { $limit: filters.limit },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'author_id',
+            foreignField: '_id',
+            as: 'authorArr',
           },
         },
-      }),
-      prisma.article.count({ where }),
+      ]).toArray(),
+      db.collection('articles').countDocuments(matchQuery),
     ]);
+
+    const articles = rawArticles.map((doc: any) => ({
+      id: doc._id.toString(),
+      title: doc.title,
+      slug: doc.slug,
+      content: doc.content,
+      excerpt: doc.excerpt ?? null,
+      featuredImage: doc.featured_image ?? null,
+      status: doc.status,
+      publishedAt: doc.published_at ?? null,
+      views: doc.views ?? 0,
+      region: doc.region ?? null,
+      type: doc.type ?? null,
+      author: doc.authorArr?.[0]
+        ? {
+            id: doc.authorArr[0]._id.toString(),
+            username: doc.authorArr[0].username,
+            name: doc.authorArr[0].name ?? null,
+            email: doc.authorArr[0].email,
+          }
+        : null,
+    }));
 
     return NextResponse.json({
       articles,
@@ -103,35 +107,50 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const data = createArticleSchema.parse(body);
 
-    // Generate unique slug
     const slug = await generateUniqueSlug(data.title);
+    const authorId = new ObjectId(session.user.id);
 
-    const article = await prisma.article.create({
-      data: {
-        title: data.title,
-        slug,
-        content: data.content,
-        excerpt: data.excerpt || null,
-        featuredImage: data.featuredImage || null,
-        status: data.status || 'draft',
-        authorId: session.user.id,
-        publishedAt: data.status === 'published' ? new Date() : null,
-        region: data.region || null,
-        type: data.type || null,
-      },
-      include: {
-        author: {
-          select: {
-            id: true,
-            username: true,
-            name: true,
-            email: true,
-          },
-        },
-      },
-    });
+    const db = await getDb();
+    const now = new Date();
+    const doc = {
+      title: data.title,
+      slug,
+      content: data.content,
+      excerpt: data.excerpt ?? null,
+      featured_image: data.featuredImage ?? null,
+      status: data.status ?? 'draft',
+      author_id: authorId,
+      published_at: data.status === 'published' ? now : null,
+      region: data.region ?? null,
+      type: data.type ?? null,
+      views: 0,
+      created_at: now,
+      updated_at: now,
+    };
 
-    return NextResponse.json(article, { status: 201 });
+    const result = await db.collection('articles').insertOne(doc);
+
+    const author = await db.collection('users').findOne(
+      { _id: authorId },
+      { projection: { _id: 1, username: 1, name: 1, email: 1 } }
+    );
+
+    return NextResponse.json({
+      id: result.insertedId.toString(),
+      title: doc.title,
+      slug: doc.slug,
+      content: doc.content,
+      excerpt: doc.excerpt,
+      featuredImage: doc.featured_image,
+      status: doc.status,
+      publishedAt: doc.published_at,
+      views: doc.views,
+      region: doc.region,
+      type: doc.type,
+      author: author
+        ? { id: author._id.toString(), username: author.username, name: author.name ?? null, email: author.email }
+        : null,
+    }, { status: 201 });
   } catch (error: any) {
     console.error('Error creating article:', error);
 

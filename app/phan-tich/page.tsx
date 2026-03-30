@@ -2,7 +2,7 @@
  * Phân tích - UI gốc (header gradient + info) nhưng dữ liệu lấy từ API bài viết
  */
 
-import { prisma } from '@/lib/db/prisma';
+import { getDb } from '@/lib/db/mongodb';
 import { formatFullDateVN } from '@/lib/utils/dates';
 import Sidebar from '@/components/layout/Sidebar/Sidebar';
 import AnalysisList from '@/components/lottery/Analysis/AnalysisList';
@@ -33,22 +33,25 @@ export const metadata = {
 
 async function getPublishedArticles() {
   try {
-    return await prisma.article.findMany({
-      where: { status: 'published' },
-      orderBy: { publishedAt: 'desc' },
-      take: 24,
-      select: {
-        id: true,
-        title: true,
-        slug: true,
-        excerpt: true,
-        featuredImage: true,
-        publishedAt: true,
-        views: true,
-        region: true,
-        type: true,
-      },
-    });
+    const db = await getDb();
+    const docs = await db.collection('articles')
+      .find({ status: 'published' })
+      .sort({ published_at: -1 })
+      .limit(24)
+      .project({ _id: 1, title: 1, slug: 1, excerpt: 1, featured_image: 1, published_at: 1, views: 1, region: 1, type: 1 })
+      .toArray();
+
+    return docs.map((doc: any) => ({
+      id: doc._id.toString(),
+      title: doc.title as string,
+      slug: doc.slug as string,
+      excerpt: (doc.excerpt ?? null) as string | null,
+      featuredImage: (doc.featured_image ?? null) as string | null,
+      publishedAt: doc.published_at ? new Date(doc.published_at) : null,
+      views: (doc.views ?? 0) as number,
+      region: (doc.region ?? null) as string | null,
+      type: (doc.type ?? null) as string | null,
+    }));
   } catch (error) {
     console.error('Error fetching articles:', error);
     return [];

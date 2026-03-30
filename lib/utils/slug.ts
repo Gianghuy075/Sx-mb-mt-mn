@@ -3,7 +3,7 @@
  */
 
 import slugify from 'slugify';
-import { prisma } from '@/lib/db/prisma';
+import { getDb } from '@/lib/db/mongodb';
 
 /**
  * Generate a URL-friendly slug from a title
@@ -21,17 +21,18 @@ export function generateSlug(title: string): string {
  * Ensure slug is unique by appending number if needed
  */
 export async function generateUniqueSlug(title: string, excludeId?: string): Promise<string> {
+  const db = await getDb();
   let slug = generateSlug(title);
   let counter = 1;
   let isUnique = false;
 
   while (!isUnique) {
-    const existing = await prisma.article.findUnique({
-      where: { slug },
-      select: { id: true },
-    });
+    const existing = await db.collection('articles').findOne(
+      { slug },
+      { projection: { _id: 1 } }
+    );
 
-    if (!existing || (excludeId && existing.id === excludeId)) {
+    if (!existing || (excludeId && existing._id.toString() === excludeId)) {
       isUnique = true;
     } else {
       slug = `${generateSlug(title)}-${counter}`;

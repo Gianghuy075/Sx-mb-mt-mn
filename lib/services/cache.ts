@@ -1,9 +1,9 @@
 /**
  * Cache Service Layer
- * Manages lottery data caching in MySQL database
+ * Manages lottery data caching in MongoDB database
  */
 
-import { prisma } from '@/lib/db/prisma';
+import { getDb } from '@/lib/db/mongodb';
 import type { Region } from '@/lib/types/lottery';
 import type { CacheOptions, CacheEntry, CacheStats } from '@/lib/types/cache';
 import { getTodayString } from '@/lib/utils/dates';
@@ -14,24 +14,30 @@ export class CacheService {
    * Returns null if not found or expired
    */
   async get(key: string, options?: { includeExpired?: boolean }): Promise<CacheEntry | null> {
-    // Database disabled - skip caching
-    if (!prisma) return null;
-
     try {
-      const entry = await prisma.lotteryCache.findUnique({
-        where: { cacheKey: key },
-      });
+      const db = await getDb();
+      const entry = await db.collection('lottery_cache').findOne({ cache_key: key });
 
       if (!entry) {
         return null;
       }
 
       // Check if expired (unless explicitly asking for expired data)
-      if (!options?.includeExpired && this.isExpired(entry.expiresAt)) {
+      if (!options?.includeExpired && this.isExpired(entry.expires_at)) {
         return null;
       }
 
-      return entry as CacheEntry;
+      return {
+        id: entry._id.toString(),
+        cacheKey: entry.cache_key,
+        region: entry.region,
+        dataType: entry.data_type,
+        date: entry.date,
+        data: entry.data,
+        expiresAt: entry.expires_at,
+        createdAt: entry.created_at,
+        updatedAt: entry.updated_at,
+      } as CacheEntry;
     } catch (error) {
       console.error('Cache get error:', error);
       return null;
@@ -43,28 +49,26 @@ export class CacheService {
    * Upserts entry (creates or updates)
    */
   async set(key: string, data: any, expiresAt: Date): Promise<void> {
-    // Database disabled - skip caching
-    if (!prisma) return;
-
     try {
       const parsedKey = this.parseKey(key);
+      const db = await getDb();
 
-      await prisma.lotteryCache.upsert({
-        where: { cacheKey: key },
-        create: {
-          cacheKey: key,
-          region: parsedKey.region,
-          dataType: parsedKey.dataType,
-          date: parsedKey.date || null,
-          data: JSON.stringify(data),
-          expiresAt,
+      await db.collection('lottery_cache').updateOne(
+        { cache_key: key },
+        {
+          $set: {
+            cache_key: key,
+            region: parsedKey.region,
+            data_type: parsedKey.dataType,
+            date: parsedKey.date ?? null,
+            data: JSON.stringify(data),
+            expires_at: expiresAt,
+            updated_at: new Date(),
+          },
+          $setOnInsert: { created_at: new Date() },
         },
-        update: {
-          data: JSON.stringify(data),
-          expiresAt,
-          updatedAt: new Date(),
-        },
-      });
+        { upsert: true }
+      );
     } catch (error) {
       console.error('Cache set error:', error);
       throw error;
@@ -76,21 +80,18 @@ export class CacheService {
    * Example: invalidate('draws:mb:*')
    */
   async invalidate(pattern: string): Promise<number> {
-    // Database disabled - skip caching
-    if (!prisma) return 0;
-
     try {
-      // Simple pattern matching (supports * wildcard at end)
       const isWildcard = pattern.endsWith('*');
       const basePattern = isWildcard ? pattern.slice(0, -1) : pattern;
+      const db = await getDb();
 
-      const result = await prisma.lotteryCache.deleteMany({
-        where: isWildcard
-          ? { cacheKey: { startsWith: basePattern } }
-          : { cacheKey: pattern },
-      });
+      const result = await db.collection('lottery_cache').deleteMany(
+        isWildcard
+          ? { cache_key: { $regex: `^${basePattern.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}` } }
+          : { cache_key: pattern }
+      );
 
-      return result.count;
+      return result.deletedCount;
     } catch (error) {
       console.error('Cache invalidate error:', error);
       return 0;
@@ -101,20 +102,14 @@ export class CacheService {
    * Remove expired cache entries
    */
   async cleanup(): Promise<number> {
-    // Database disabled - skip caching
-    if (!prisma) return 0;
-
     try {
-      const result = await prisma.lotteryCache.deleteMany({
-        where: {
-          expiresAt: {
-            lt: new Date(),
-          },
-        },
+      const db = await getDb();
+      const result = await db.collection('lottery_cache').deleteMany({
+        expires_at: { $lt: new Date() },
       });
 
-      console.log(`Cleaned up ${result.count} expired cache entries`);
-      return result.count;
+      console.log(`Cleaned up ${result.deletedCount} expired cache entries`);
+      return result.deletedCount;
     } catch (error) {
       console.error('Cache cleanup error:', error);
       return 0;
@@ -211,56 +206,33 @@ export class CacheService {
    * Get cache statistics
    */
   async getStats(): Promise<CacheStats> {
-    // Database disabled - return empty stats
-    if (!prisma) {
-      return {
-        totalEntries: 0,
-        hitRate: 0,
-        missRate: 0,
-        totalHits: 0,
-        totalMisses: 0,
-        averageAge: 0,
-        oldestEntry: null,
-        newestEntry: null,
-      };
-    }
-
     try {
-      const [totalEntries, oldestEntry, newestEntry] = await Promise.all([
-        prisma.lotteryCache.count(),
-        prisma.lotteryCache.findFirst({
-          orderBy: { createdAt: 'asc' },
-          select: { createdAt: true },
-        }),
-        prisma.lotteryCache.findFirst({
-          orderBy: { createdAt: 'desc' },
-          select: { createdAt: true },
-        }),
+      const db = await getDb();
+      const [totalEntries, oldestEntry, newestEntry, entries] = await Promise.all([
+        db.collection('lottery_cache').countDocuments(),
+        db.collection('lottery_cache').findOne({}, { sort: { created_at: 1 }, projection: { created_at: 1 } }),
+        db.collection('lottery_cache').findOne({}, { sort: { created_at: -1 }, projection: { created_at: 1 } }),
+        db.collection('lottery_cache').find({}, { projection: { created_at: 1 } }).toArray(),
       ]);
 
-      // Calculate average age
-      const entries = await prisma.lotteryCache.findMany({
-        select: { createdAt: true },
-      });
-
       const now = Date.now();
-      const totalAge = entries.reduce((sum: number, entry: { createdAt: Date }) => {
-        return sum + (now - entry.createdAt.getTime());
+      const totalAge = entries.reduce((sum: number, entry: any) => {
+        return sum + (now - new Date(entry.created_at).getTime());
       }, 0);
 
       const averageAge = entries.length > 0
-        ? totalAge / entries.length / (1000 * 60 * 60)  // Convert to hours
+        ? totalAge / entries.length / (1000 * 60 * 60)
         : 0;
 
       return {
         totalEntries,
-        hitRate: 0,      // TODO: Implement hit tracking
-        missRate: 0,     // TODO: Implement miss tracking
-        totalHits: 0,    // TODO: Implement hit tracking
-        totalMisses: 0,  // TODO: Implement miss tracking
+        hitRate: 0,
+        missRate: 0,
+        totalHits: 0,
+        totalMisses: 0,
         averageAge,
-        oldestEntry: oldestEntry?.createdAt || null,
-        newestEntry: newestEntry?.createdAt || null,
+        oldestEntry: oldestEntry?.created_at ? new Date(oldestEntry.created_at) : null,
+        newestEntry: newestEntry?.created_at ? new Date(newestEntry.created_at) : null,
       };
     } catch (error) {
       console.error('Cache stats error:', error);

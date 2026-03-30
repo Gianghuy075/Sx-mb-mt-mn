@@ -3,7 +3,8 @@
  */
 
 import { notFound } from 'next/navigation';
-import { prisma } from '@/lib/db/prisma';
+import { ObjectId } from 'mongodb';
+import { getDb } from '@/lib/db/mongodb';
 import { formatFullDateVN } from '@/lib/utils/dates';
 import ArticleContent from '@/components/ArticleContent';
 import styles from './page.module.css';
@@ -14,30 +15,38 @@ interface PageProps {
 
 async function getArticleBySlug(slug: string) {
   try {
-    const article = await prisma.article.findUnique({
-      where: { slug, status: 'published' },
-      select: {
-        id: true,
-        title: true,
-        content: true,
-        excerpt: true,
-        featuredImage: true,
-        publishedAt: true,
-        views: true,
-        author: {
-          select: { name: true, username: true },
-        },
-      },
-    });
+    const db = await getDb();
+    const doc = await db.collection('articles').findOne(
+      { slug, status: 'published' },
+      { projection: { _id: 1, title: 1, content: 1, excerpt: 1, featured_image: 1, published_at: 1, views: 1, author_id: 1 } }
+    );
 
-    if (article) {
-      await prisma.article.update({
-        where: { id: article.id },
-        data: { views: { increment: 1 } },
-      });
-    }
+    if (!doc) return null;
 
-    return article;
+    // Increment views
+    await db.collection('articles').updateOne(
+      { _id: doc._id },
+      { $inc: { views: 1 } }
+    );
+
+    // Get author
+    const author = await db.collection('users').findOne(
+      { _id: doc.author_id },
+      { projection: { name: 1, username: 1 } }
+    );
+
+    return {
+      id: (doc._id as ObjectId).toString(),
+      title: doc.title as string,
+      content: doc.content as string,
+      excerpt: (doc.excerpt ?? null) as string | null,
+      featuredImage: (doc.featured_image ?? null) as string | null,
+      publishedAt: doc.published_at ? new Date(doc.published_at) : null,
+      views: (doc.views ?? 0) as number,
+      author: author
+        ? { name: (author.name ?? null) as string | null, username: author.username as string }
+        : null,
+    };
   } catch (error) {
     console.error('Error fetching article:', error);
     return null;

@@ -6,7 +6,7 @@
 import type { AuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from 'bcrypt';
-import { prisma } from '@/lib/db/prisma';
+import { getDb } from '@/lib/db/mongodb';
 
 export const authConfig: AuthOptions = {
   providers: [
@@ -21,17 +21,11 @@ export const authConfig: AuthOptions = {
           return null;
         }
 
-        const user = await prisma.user.findUnique({
-          where: { username: credentials.username as string },
-          select: {
-            id: true,
-            username: true,
-            email: true,
-            name: true,
-            passwordHash: true,
-            role: true,
-          },
-        });
+        const db = await getDb();
+        const user = await db.collection('users').findOne(
+          { username: credentials.username as string },
+          { projection: { _id: 1, username: 1, email: 1, name: 1, password_hash: 1, role: 1 } }
+        );
 
         if (!user) {
           return null;
@@ -39,7 +33,7 @@ export const authConfig: AuthOptions = {
 
         const isPasswordValid = await bcrypt.compare(
           credentials.password as string,
-          user.passwordHash
+          user.password_hash
         );
 
         if (!isPasswordValid) {
@@ -47,10 +41,10 @@ export const authConfig: AuthOptions = {
         }
 
         return {
-          id: user.id,
+          id: user._id.toString(),
           username: user.username,
           email: user.email,
-          name: user.name,
+          name: user.name ?? null,
           role: user.role,
         };
       },

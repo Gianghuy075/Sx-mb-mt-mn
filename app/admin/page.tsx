@@ -3,7 +3,7 @@
  */
 
 import Link from 'next/link';
-import { prisma } from '@/lib/db/prisma';
+import { getDb } from '@/lib/db/mongodb';
 import styles from './page.module.css';
 
 export const metadata = {
@@ -13,10 +13,11 @@ export const metadata = {
 
 async function getStats() {
   try {
+    const db = await getDb();
     const [totalArticles, draftArticles, publishedArticles] = await Promise.all([
-      prisma.article.count(),
-      prisma.article.count({ where: { status: 'draft' } }),
-      prisma.article.count({ where: { status: 'published' } }),
+      db.collection('articles').countDocuments(),
+      db.collection('articles').countDocuments({ status: 'draft' }),
+      db.collection('articles').countDocuments({ status: 'published' }),
     ]);
 
     return {
