@@ -25,20 +25,6 @@ export default function StatsPageLayout({
 }: StatsPageLayoutProps) {
   return (
     <>
-      {breadcrumbs.length > 0 && (
-        <div className="breadcrumb">
-          {breadcrumbs.map((crumb, index) => (
-            <span key={index}>
-              {crumb.href ? (
-                <Link href={crumb.href}>{crumb.label}</Link>
-              ) : (
-                <span>{crumb.label}</span>
-              )}
-              {index < breadcrumbs.length - 1 && <span> › </span>}
-            </span>
-          ))}
-        </div>
-      )}
 
       <div className="page-header" style={{ background: `linear-gradient(135deg, ${headerColor} 0%, ${adjustColor(headerColor, 20)} 100%)` }}>
         <h1>{headerTitle}</h1>

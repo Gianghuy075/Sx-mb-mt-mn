@@ -30,15 +30,7 @@ export default function Navigation() {
         <Link href="/thong-ke" className={styles.navItem}>
           THỐNG KÊ
         </Link>
-        <Link href="/tra-cuu" className={styles.navItem}>
-          TRA CỨU KQ
-        </Link>
-        <Link href="/so-dau-duoi" className={styles.navItem}>
-          SỐ ĐẦU ĐUÔI
-        </Link>
-        <Link href="/tin-xo-so" className={styles.navItem}>
-          TIN XỔ SỐ
-        </Link>
+
       </div>
     </nav>
   );

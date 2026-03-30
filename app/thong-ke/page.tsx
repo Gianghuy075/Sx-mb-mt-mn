@@ -1,9 +1,8 @@
 import { Metadata } from 'next';
-import Navigation from '@/components/layout/Navigation/Navigation';
 import Breadcrumb from '@/components/layout/Breadcrumb/Breadcrumb';
 import Sidebar from '@/components/layout/Sidebar/Sidebar';
 import StatisticsTabs from '@/components/lottery/Statistics/StatisticsTabs';
-import styles from './statistics.module.css';
+import styles from '../_thong-ke/statistics.module.css';
 
 export const metadata: Metadata = {
   title: 'Thống kê xổ số - Thống kê giải đặc biệt, giải đầu, giải đuôi',
@@ -11,6 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default function StatisticsPage() {
+
   return (
     <div className={styles.pageContainer}>
 

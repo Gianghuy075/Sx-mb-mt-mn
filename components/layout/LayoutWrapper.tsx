@@ -25,6 +25,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
   return (
     <>
       <Header />
+      <Navigation />
       {children}
       <Footer />
     </>

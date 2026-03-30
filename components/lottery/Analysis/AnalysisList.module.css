@@ -1,0 +1,122 @@
+.section {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.filterContainer {
+  background: linear-gradient(135deg, #f9f9f9 0%, #ffffff 100%);
+  padding: 2rem;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.filterGroup {
+  margin-bottom: 1.5rem;
+}
+
+.filterGroup:last-child {
+  margin-bottom: 0;
+}
+
+.filterTitle {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 0.75rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.filterButtonsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.75rem;
+}
+
+.filterBtn {
+  padding: 0.65rem 1rem;
+  border: 2px solid #e0e0e0;
+  background: white;
+  color: #666;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.filterBtn:hover {
+  border-color: #667eea;
+  color: #667eea;
+}
+
+.filterBtn.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-color: #667eea;
+}
+
+.analysisContainer {
+  padding: 2rem;
+}
+
+.resultsInfo {
+  margin-bottom: 1.5rem;
+}
+
+.resultsTitle {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.cardsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #999;
+}
+
+.empty p {
+  font-size: 1rem;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .filterContainer {
+    padding: 1.5rem 1rem;
+  }
+
+  .filterGroup {
+    margin-bottom: 1rem;
+  }
+
+  .filterTitle {
+    font-size: 0.85rem;
+  }
+
+  .filterButtonsGrid {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 0.5rem;
+  }
+
+  .filterBtn {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+  }
+
+  .analysisContainer {
+    padding: 1.5rem 1rem;
+  }
+
+  .resultsTitle {
+    font-size: 1rem;
+  }
+}

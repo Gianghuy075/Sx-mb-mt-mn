@@ -5,6 +5,7 @@
 
 import type { LotteryDataMulti } from '@/lib/types/lottery';
 import { getRegionName } from '@/lib/utils/regions';
+import { getPrizeNumber } from '@/lib/utils/lottery-helpers';
 import styles from './ResultsTable.module.css';
 
 interface ResultsTableMultiProps {
@@ -58,19 +59,7 @@ export default function ResultsTableMulti({ data }: ResultsTableMultiProps) {
               {/* Assume all provinces have same number of prizes */}
               {group[0].prizes.map((_, prizeIndex) => {
                 const prizeClass = group[0].prizes[prizeIndex].cls;
-                const prizeLabel = group[0].prizes[prizeIndex].label;
-
-                // Extract prize number (8, 7, 6, etc.) from label
-                const prizeNumber = prizeLabel.includes('tám') ? '8'
-                  : prizeLabel.includes('bảy') ? '7'
-                  : prizeLabel.includes('sáu') ? '6'
-                  : prizeLabel.includes('năm') ? '5'
-                  : prizeLabel.includes('tư') ? '4'
-                  : prizeLabel.includes('ba') ? '3'
-                  : prizeLabel.includes('nhì') ? '2'
-                  : prizeLabel.includes('nhất') ? '1'
-                  : prizeLabel.includes('đặc biệt') ? 'ĐB'
-                  : prizeIndex.toString();
+                const prizeNumber = getPrizeNumber(prizeClass);
 
                 return (
                   <tr key={prizeIndex} className={styles[prizeClass]}>

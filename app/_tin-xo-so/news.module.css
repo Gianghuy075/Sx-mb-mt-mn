@@ -1,0 +1,118 @@
+.pageContainer {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.mainContent {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+.contentArea {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.pageHeader {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  color: #333;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border-left: 4px solid #f59e0b;
+}
+
+.pageTitle {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin: 0;
+  color: #dc2626;
+}
+
+.infoSection {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.infoSection h2 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 1.5rem 0;
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.infoCard {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  padding: 1.25rem;
+  border-radius: 6px;
+  border-left: 4px solid #f59e0b;
+}
+
+.infoCard h3 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #92400e;
+  margin: 0 0 0.5rem 0;
+}
+
+.infoCard p {
+  font-size: 0.9rem;
+  color: #b45309;
+  margin: 0;
+  line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+  .pageContainer {
+    padding: 10px;
+  }
+
+  .mainContent {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .pageHeader {
+    padding: 1rem;
+  }
+
+  .pageTitle {
+    font-size: 1.1rem;
+  }
+
+  .infoSection {
+    padding: 1.5rem 1rem;
+  }
+
+  .infoSection h2 {
+    font-size: 1.1rem;
+  }
+
+  .infoGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .infoCard {
+    padding: 1rem;
+  }
+
+  .infoCard h3 {
+    font-size: 0.9rem;
+  }
+
+  .infoCard p {
+    font-size: 0.85rem;
+  }
+}

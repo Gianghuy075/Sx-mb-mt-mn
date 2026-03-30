@@ -215,6 +215,14 @@
   font-size: 16px;
 }
 
+.lotteryTable .second .prizeNum {
+  font-size: 14px;
+}
+
+.lotteryTable .eighth .prizeNum {
+  font-size: 14px;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .resultRow {

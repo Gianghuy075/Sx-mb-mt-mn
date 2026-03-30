@@ -1,9 +1,8 @@
 import { Metadata } from 'next';
-import Navigation from '@/components/layout/Navigation/Navigation';
 import Breadcrumb from '@/components/layout/Breadcrumb/Breadcrumb';
 import Sidebar from '@/components/layout/Sidebar/Sidebar';
 import NewsList from '@/components/lottery/News/NewsList';
-import styles from './news.module.css';
+import styles from '../_tin-xo-so/news.module.css';
 
 export const metadata: Metadata = {
   title: 'Tin xổ số - Dự đoán xổ số Miền Bắc, Miền Trung, Miền Nam hôm nay',
@@ -14,7 +13,6 @@ export default function NewsPage() {
 
   return (
     <div className={styles.pageContainer}>
-
 
       <div className={styles.mainContent}>
         <div className={styles.contentArea}>

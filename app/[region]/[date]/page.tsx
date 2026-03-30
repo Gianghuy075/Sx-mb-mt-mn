@@ -12,6 +12,9 @@ import ResultsTableMulti from '@/components/lottery/ResultsTable/ResultsTableMul
 import DayTabs from '@/components/lottery/DayTabs/DayTabs';
 import Sidebar from '@/components/layout/Sidebar/Sidebar';
 import Breadcrumb from '@/components/layout/Breadcrumb/Breadcrumb';
+import { XSMN_DEMO_DATA } from '@/lib/data/xsmn-demo';
+import { XSMB_DEMO_DATA } from '@/lib/data/xsmb-demo';
+import { XSMT_DEMO_DATA } from '@/lib/data/xsmt-demo';
 import type { Region } from '@/lib/types/lottery';
 
 interface PageProps {
@@ -50,7 +53,20 @@ export default async function ResultsPage({ params }: PageProps) {
     console.log(`[ResultsPage] Valid params: region=${region}, date=${actualDate}`);
 
     // Fetch lottery data (Server Component - runs on server)
-    const data = await fetchLotteryData(region as Region, actualDate);
+    // Use fixed demo data for both MB and MN
+    let data;
+    if (region === 'mb') {
+      data = XSMB_DEMO_DATA;
+      console.log(`[ResultsPage] Using fixed XSMB demo data`);
+    } else if (region === 'mn') {
+      data = XSMN_DEMO_DATA;
+      console.log(`[ResultsPage] Using fixed XSMN demo data`);
+    } else if (region === 'mt') {
+      data = XSMT_DEMO_DATA;
+      console.log(`[ResultsPage] Using fixed XSMT demo data`);
+    } else {
+      data = await fetchLotteryData(region as Region, actualDate);
+    }
 
     console.log(`[ResultsPage] Data fetched: region=${data.region}, provinces=${data.region === 'mb' ? 1 : (data as any).provinces?.length || 0}`);
 

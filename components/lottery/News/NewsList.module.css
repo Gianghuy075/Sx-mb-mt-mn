@@ -1,0 +1,94 @@
+.section {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.tabsContainer {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  padding: 1rem 2rem;
+  border-bottom: 2px solid #fcd34d;
+}
+
+.tabsNav {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.tab {
+  padding: 0.65rem 1.25rem;
+  border: 2px solid transparent;
+  background: white;
+  color: #666;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.tab:hover {
+  border-color: #dc2626;
+  color: #dc2626;
+}
+
+.tab.active {
+  background: #dc2626;
+  color: white;
+  border-color: #dc2626;
+}
+
+.sectionTitle {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  padding: 1rem 2rem 1.5rem;
+  border-bottom: 1px solid #fcd34d;
+}
+
+.sectionTitle h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.newsContainer {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.empty {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: #999;
+}
+
+.empty p {
+  font-size: 1rem;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .tabsContainer {
+    padding: 0.75rem 1rem;
+  }
+
+  .tab {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .sectionTitle {
+    padding: 0.75rem 1rem 1rem;
+  }
+
+  .sectionTitle h2 {
+    font-size: 1.1rem;
+  }
+
+  .newsContainer {
+    padding: 1.5rem 1rem;
+  }
+}

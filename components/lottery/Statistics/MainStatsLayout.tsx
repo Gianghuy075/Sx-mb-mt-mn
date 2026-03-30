@@ -15,11 +15,6 @@ interface MainStatsLayoutProps {
 export default function MainStatsLayout({ children }: MainStatsLayoutProps) {
   return (
     <>
-      <div className="breadcrumb">
-        <Link href="/">Trang chủ</Link>
-        <span> › </span>
-        <span>Thống kê</span>
-      </div>
 
       <div className="stats-header">
         <h1>📊 Thống Kê Xổ Số</h1>

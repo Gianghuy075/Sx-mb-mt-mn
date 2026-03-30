@@ -1,9 +1,8 @@
 import { Metadata } from 'next';
-import Navigation from '@/components/layout/Navigation/Navigation';
 import Breadcrumb from '@/components/layout/Breadcrumb/Breadcrumb';
 import Sidebar from '@/components/layout/Sidebar/Sidebar';
 import AnalysisList from '@/components/lottery/Analysis/AnalysisList';
-import styles from './analysis.module.css';
+import styles from '../_phan-tich/analysis.module.css';
 
 export const metadata: Metadata = {
   title: 'Phân tích xổ số - Phân tích xu hướng, số nóng, tần suất xổ số Miền Bắc, Miền Trung, Miền Nam',
