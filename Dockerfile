@@ -26,7 +26,8 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
-RUN addgroup -g 1001 -S nodejs && \
+RUN apk add --no-cache openssl && \
+    addgroup -g 1001 -S nodejs && \
     adduser -S nextjs -u 1001
 
 # standalone output only copies what's needed (~10x smaller than full node_modules)
