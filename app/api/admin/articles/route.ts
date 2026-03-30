@@ -8,7 +8,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { authConfig } from '@/lib/auth/auth';
 import { prisma } from '@/lib/db/prisma';
-import { createArticleSchema, articleListFiltersSchema } from '@/lib/validations/article';
+import { createArticleSchema, articleListFiltersSchema, articleRegionEnum, articleTypeEnum } from '@/lib/validations/article';
 import { generateUniqueSlug } from '@/lib/utils/slug';
 
 export async function GET(request: NextRequest) {
@@ -21,6 +21,8 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const filters = articleListFiltersSchema.parse({
       status: searchParams.get('status') || undefined,
+      region: searchParams.get('region') || undefined,
+      type: searchParams.get('type') || undefined,
       search: searchParams.get('search') || undefined,
       page: searchParams.get('page') || '1',
       limit: searchParams.get('limit') || '10',
@@ -39,6 +41,14 @@ export async function GET(request: NextRequest) {
       ];
     }
 
+    if (filters.region) {
+      where.region = filters.region;
+    }
+
+    if (filters.type) {
+      where.type = filters.type;
+    }
+
     const [articles, total] = await Promise.all([
       prisma.article.findMany({
         where,
@@ -55,6 +65,27 @@ export async function GET(request: NextRequest) {
         orderBy: { createdAt: 'desc' },
         skip: (filters.page - 1) * filters.limit,
         take: filters.limit,
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+          content: true,
+          excerpt: true,
+          featuredImage: true,
+          status: true,
+          publishedAt: true,
+          views: true,
+          region: true,
+          type: true,
+          author: {
+            select: {
+              id: true,
+              username: true,
+              name: true,
+              email: true,
+            },
+          },
+        },
       }),
       prisma.article.count({ where }),
     ]);
@@ -95,6 +126,8 @@ export async function POST(request: NextRequest) {
         status: data.status || 'draft',
         authorId: session.user.id,
         publishedAt: data.status === 'published' ? new Date() : null,
+        region: data.region || null,
+        type: data.type || null,
       },
       include: {
         author: {

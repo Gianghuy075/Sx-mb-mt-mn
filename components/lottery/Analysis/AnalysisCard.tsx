@@ -4,6 +4,7 @@
 
 import styles from './AnalysisCard.module.css';
 import { AnalysisItem } from '@/lib/data/analysis-demo';
+import Link from 'next/link';
 
 interface AnalysisCardProps {
   item: AnalysisItem;
@@ -53,7 +54,7 @@ export default function AnalysisCard({ item }: AnalysisCardProps) {
     }
   };
 
-  return (
+  const CardBody = (
     <article
       className={styles.card}
       style={{ borderLeftColor: getRegionColor(item.region) }}
@@ -86,4 +87,14 @@ export default function AnalysisCard({ item }: AnalysisCardProps) {
       </div>
     </article>
   );
+
+  if (item.slug) {
+    return (
+      <Link href={`/phan-tich/${item.slug}`} className={styles.cardLink}>
+        {CardBody}
+      </Link>
+    );
+  }
+
+  return CardBody;
 }

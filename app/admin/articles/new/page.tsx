@@ -17,6 +17,8 @@ export default function NewArticlePage() {
   const [excerpt, setExcerpt] = useState('');
   const [featuredImage, setFeaturedImage] = useState('');
   const [status, setStatus] = useState<'draft' | 'published'>('draft');
+  const [region, setRegion] = useState<'mb' | 'mt' | 'mn' | 'all'>('all');
+  const [type, setType] = useState<'trend' | 'hot-cold' | 'frequency' | 'cycle' | 'analysis'>('analysis');
   const [isSaving, setIsSaving] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -44,6 +46,8 @@ export default function NewArticlePage() {
           excerpt: excerpt || undefined,
           featuredImage: featuredImage || undefined,
           status,
+          region,
+          type,
         }),
       });
 
@@ -100,6 +104,36 @@ export default function NewArticlePage() {
           value={featuredImage}
           onChange={setFeaturedImage}
         />
+
+        <div className={styles.formGroup} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+          <div>
+            <label className={styles.label}>Khu vực</label>
+            <select
+              value={region}
+              onChange={(e) => setRegion(e.target.value as any)}
+              className={styles.select}
+            >
+              <option value="all">Tất cả</option>
+              <option value="mb">Miền Bắc</option>
+              <option value="mt">Miền Trung</option>
+              <option value="mn">Miền Nam</option>
+            </select>
+          </div>
+          <div>
+            <label className={styles.label}>Loại phân tích</label>
+            <select
+              value={type}
+              onChange={(e) => setType(e.target.value as any)}
+              className={styles.select}
+            >
+              <option value="analysis">Phân tích</option>
+              <option value="trend">Xu hướng</option>
+              <option value="hot-cold">Số nóng/lạnh</option>
+              <option value="frequency">Tần suất</option>
+              <option value="cycle">Chu kỳ</option>
+            </select>
+          </div>
+        </div>
 
         <div className={styles.formGroup}>
           <label className={styles.label}>

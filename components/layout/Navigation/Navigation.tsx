@@ -24,13 +24,12 @@ export default function Navigation() {
         <Link href="/vietlott" className={styles.navItem}>
           VIETLOTT
         </Link>
-        <Link href="/phan-tich" className={styles.navItem}>
-          PHÂN TÍCH
-        </Link>
         <Link href="/thong-ke" className={styles.navItem}>
           THỐNG KÊ
         </Link>
-
+        <Link href="/phan-tich" className={styles.navItem}>
+          PHÂN TÍCH
+        </Link>
       </div>
     </nav>
   );

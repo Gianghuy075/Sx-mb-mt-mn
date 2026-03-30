@@ -57,14 +57,15 @@ export default async function AnalysisPage() {
   const articles = await getPublishedArticles();
   const analysisItems: AnalysisItem[] = articles.map((article) => ({
     id: article.id,
+    slug: article.slug,
     date: article.publishedAt
       ? `Cập nhật ${formatFullDateVN(article.publishedAt.toISOString().split('T')[0])}`
       : 'Chưa xuất bản',
-    region: detectRegion(`${article.title} ${article.excerpt ?? ''}`),
+    region: ((article.region as any) || detectRegion(`${article.title} ${article.excerpt ?? ''}`)).toUpperCase() as any,
     regionName: 'Toàn quốc',
     title: article.title,
     description: article.excerpt || 'Xem chi tiết bài phân tích.',
-    type: detectType(`${article.title} ${article.excerpt ?? ''}`),
+    type: (article.type as any) || detectType(`${article.title} ${article.excerpt ?? ''}`),
     typeLabel: 'Phân tích',
     metrics: `👁️ ${article.views} lượt xem`,
   }));
@@ -73,13 +74,6 @@ export default async function AnalysisPage() {
     <div className={styles.pageContainer}>
       <div className={styles.mainContent}>
         <div className={styles.contentArea}>
-          <div className={styles.pageHeader}>
-            <h1 className={styles.pageTitle}>📊 PHÂN TÍCH XỔ SỐ</h1>
-            <p className={styles.pageSubtitle}>
-              Xu hướng, số nóng/lạnh, tần suất và nhận định chuyên gia
-            </p>
-          </div>
-
           <div className={styles.articlesSection}>
             <div className={styles.articlesHeader}>
               <h2 className={styles.articlesTitle}>Bài viết mới nhất</h2>

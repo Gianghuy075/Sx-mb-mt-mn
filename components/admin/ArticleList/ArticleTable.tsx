@@ -25,11 +25,13 @@ export default function ArticleTable() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [status, setStatus] = useState<string>('');
+  const [region, setRegion] = useState<string>('');
+  const [type, setType] = useState<string>('');
   const [page, setPage] = useState(1);
 
   useEffect(() => {
     fetchArticles();
-  }, [search, status, page]);
+  }, [search, status, region, type, page]);
 
   const fetchArticles = async () => {
     setLoading(true);
@@ -37,6 +39,8 @@ export default function ArticleTable() {
       const params = new URLSearchParams();
       if (search) params.set('search', search);
       if (status) params.set('status', status);
+      if (region) params.set('region', region);
+      if (type) params.set('type', type);
       params.set('page', String(page));
 
       const response = await fetch(`/api/admin/articles?${params}`);
@@ -130,6 +134,37 @@ export default function ArticleTable() {
           <option value="draft">Nháp</option>
           <option value="published">Đã xuất bản</option>
           <option value="archived">Đã xóa</option>
+        </select>
+
+        <select
+          value={region}
+          onChange={(e) => {
+            setRegion(e.target.value);
+            setPage(1);
+          }}
+          className={styles.filterSelect}
+        >
+          <option value="">Tất cả khu vực</option>
+          <option value="mb">Miền Bắc</option>
+          <option value="mt">Miền Trung</option>
+          <option value="mn">Miền Nam</option>
+          <option value="all">Tất cả</option>
+        </select>
+
+        <select
+          value={type}
+          onChange={(e) => {
+            setType(e.target.value);
+            setPage(1);
+          }}
+          className={styles.filterSelect}
+        >
+          <option value="">Tất cả loại</option>
+          <option value="analysis">Phân tích</option>
+          <option value="trend">Xu hướng</option>
+          <option value="hot-cold">Số nóng/lạnh</option>
+          <option value="frequency">Tần suất</option>
+          <option value="cycle">Chu kỳ</option>
         </select>
       </div>
 

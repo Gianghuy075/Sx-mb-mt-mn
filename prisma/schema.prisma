@@ -44,6 +44,8 @@ model Article {
   content       String
   excerpt       String?
   featuredImage String?        @map("featured_image")
+  region        String?        // 'mb' | 'mt' | 'mn' | 'all'
+  type          String?        // 'trend' | 'hot-cold' | 'frequency' | 'cycle' | 'analysis'
   authorId      String         @map("author_id") @db.ObjectId
   status        ArticleStatus  @default(draft)
   publishedAt   DateTime?      @map("published_at")

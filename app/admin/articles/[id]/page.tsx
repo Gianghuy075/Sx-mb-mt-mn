@@ -26,6 +26,8 @@ export default function EditArticlePage({ params }: PageProps) {
   const [excerpt, setExcerpt] = useState('');
   const [featuredImage, setFeaturedImage] = useState('');
   const [status, setStatus] = useState<'draft' | 'published' | 'archived'>('draft');
+  const [region, setRegion] = useState<'mb' | 'mt' | 'mn' | 'all'>('all');
+  const [type, setType] = useState<'trend' | 'hot-cold' | 'frequency' | 'cycle' | 'analysis'>('analysis');
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
@@ -43,6 +45,8 @@ export default function EditArticlePage({ params }: PageProps) {
         setExcerpt(data.excerpt || '');
         setFeaturedImage(data.featuredImage || '');
         setStatus(data.status);
+        setRegion((data.region as any) || 'all');
+        setType((data.type as any) || 'analysis');
       } else {
         alert('Không tìm thấy bài viết');
         router.push('/admin/articles');
@@ -80,6 +84,8 @@ export default function EditArticlePage({ params }: PageProps) {
           excerpt: excerpt || undefined,
           featuredImage: featuredImage || undefined,
           status,
+          region,
+          type,
         }),
       });
 
@@ -166,6 +172,36 @@ export default function EditArticlePage({ params }: PageProps) {
           value={featuredImage}
           onChange={setFeaturedImage}
         />
+
+        <div className={styles.formGroup} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+          <div>
+            <label className={styles.label}>Khu vực</label>
+            <select
+              value={region}
+              onChange={(e) => setRegion(e.target.value as any)}
+              className={styles.select}
+            >
+              <option value="all">Tất cả</option>
+              <option value="mb">Miền Bắc</option>
+              <option value="mt">Miền Trung</option>
+              <option value="mn">Miền Nam</option>
+            </select>
+          </div>
+          <div>
+            <label className={styles.label}>Loại phân tích</label>
+            <select
+              value={type}
+              onChange={(e) => setType(e.target.value as any)}
+              className={styles.select}
+            >
+              <option value="analysis">Phân tích</option>
+              <option value="trend">Xu hướng</option>
+              <option value="hot-cold">Số nóng/lạnh</option>
+              <option value="frequency">Tần suất</option>
+              <option value="cycle">Chu kỳ</option>
+            </select>
+          </div>
+        </div>
 
         <div className={styles.formGroup}>
           <label className={styles.label}>

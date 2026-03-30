@@ -82,6 +82,12 @@
   line-height: 1.5;
 }
 
+.cardLink {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
 @media (max-width: 768px) {
   .card {
     padding: 1rem;

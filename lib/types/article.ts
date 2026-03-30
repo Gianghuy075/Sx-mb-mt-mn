@@ -11,6 +11,8 @@ export interface Article {
   content: string;
   excerpt: string | null;
   featuredImage: string | null;
+  region?: string | null;
+  type?: string | null;
   authorId: string;
   status: ArticleStatus;
   publishedAt: Date | null;

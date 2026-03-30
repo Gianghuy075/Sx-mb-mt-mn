@@ -12,6 +12,7 @@ export interface AnalysisItem {
   type: 'trend' | 'hot-cold' | 'frequency' | 'cycle' | 'analysis';
   typeLabel: string;
   metrics: string;
+  slug?: string;
 }
 
 export const ANALYSIS_DEMO: AnalysisItem[] = [

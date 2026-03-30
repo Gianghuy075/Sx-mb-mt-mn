@@ -37,6 +37,27 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
           },
         },
       },
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        content: true,
+        excerpt: true,
+        featuredImage: true,
+        status: true,
+        publishedAt: true,
+        views: true,
+        region: true,
+        type: true,
+        author: {
+          select: {
+            id: true,
+            username: true,
+            name: true,
+            email: true,
+          },
+        },
+      },
     });
 
     if (!article) {
@@ -98,6 +119,14 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
       if (existing.status !== 'published' && data.status === 'published') {
         updateData.publishedAt = new Date();
       }
+    }
+
+    if (data.region !== undefined) {
+      updateData.region = data.region || null;
+    }
+
+    if (data.type !== undefined) {
+      updateData.type = data.type || null;
     }
 
     const article = await prisma.article.update({

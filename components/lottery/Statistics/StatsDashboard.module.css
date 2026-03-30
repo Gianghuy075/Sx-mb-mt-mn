@@ -1,0 +1,81 @@
+.wrapper {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  padding: 16px;
+}
+
+.regionTabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.regionTab {
+  padding: 10px 14px;
+  border-radius: 6px;
+  border: 2px solid #e0e0e0;
+  background: white;
+  color: #c0392b;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.regionTab.active {
+  background: linear-gradient(135deg, #c0392b, #e74c3c);
+  border-color: #c0392b;
+  color: white;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 12px;
+}
+
+.card {
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 12px;
+  background: #fffaf5;
+}
+
+.card h3 {
+  margin: 0 0 8px 0;
+  color: #c0392b;
+  font-size: 15px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.table th,
+.table td {
+  border: 1px solid #eee;
+  padding: 6px 8px;
+  text-align: left;
+}
+
+.notice {
+  padding: 12px;
+  color: #666;
+}
+
+.error {
+  padding: 12px;
+  color: #b71c1c;
+  background: #ffebee;
+  border-radius: 6px;
+}
+
+.pre {
+  max-height: 240px;
+  overflow: auto;
+  background: #f8f8f8;
+  padding: 8px;
+  border-radius: 6px;
+  font-size: 12px;
+}

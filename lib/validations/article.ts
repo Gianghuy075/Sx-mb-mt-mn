@@ -5,6 +5,8 @@
 import { z } from 'zod';
 
 export const articleStatusEnum = z.enum(['draft', 'published', 'archived']);
+export const articleRegionEnum = z.enum(['mb', 'mt', 'mn', 'all']);
+export const articleTypeEnum = z.enum(['trend', 'hot-cold', 'frequency', 'cycle', 'analysis']);
 
 export const createArticleSchema = z.object({
   title: z
@@ -26,6 +28,8 @@ export const createArticleSchema = z.object({
     .optional()
     .or(z.literal('')),
   status: articleStatusEnum.optional().default('draft'),
+  region: articleRegionEnum.optional(),
+  type: articleTypeEnum.optional(),
 });
 
 export const updateArticleSchema = z.object({
@@ -49,10 +53,14 @@ export const updateArticleSchema = z.object({
     .optional()
     .or(z.literal('')),
   status: articleStatusEnum.optional(),
+  region: articleRegionEnum.optional(),
+  type: articleTypeEnum.optional(),
 });
 
 export const articleListFiltersSchema = z.object({
   status: articleStatusEnum.optional(),
+  region: articleRegionEnum.optional(),
+  type: articleTypeEnum.optional(),
   search: z.string().optional(),
   page: z.coerce.number().int().min(1).optional().default(1),
   limit: z.coerce.number().int().min(1).max(100).optional().default(10),

@@ -47,14 +47,14 @@
 }
 
 .filterBtn:hover {
-  border-color: #667eea;
-  color: #667eea;
+  border-color: #c0392b;
+  color: #c0392b;
 }
 
 .filterBtn.active {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
   color: white;
-  border-color: #667eea;
+  border-color: #c0392b;
 }
 
 .analysisContainer {
