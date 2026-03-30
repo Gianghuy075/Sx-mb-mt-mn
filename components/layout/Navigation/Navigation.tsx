@@ -21,9 +21,6 @@ export default function Navigation() {
         <Link href="/mt/today" className={styles.navItem}>
           XSMT
         </Link>
-        <Link href="/vietlott" className={styles.navItem}>
-          VIETLOTT
-        </Link>
         <Link href="/thong-ke" className={styles.navItem}>
           THỐNG KÊ
         </Link>
