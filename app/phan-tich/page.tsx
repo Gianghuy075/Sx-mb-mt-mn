@@ -45,6 +45,8 @@ async function getPublishedArticles() {
         featuredImage: true,
         publishedAt: true,
         views: true,
+        region: true,
+        type: true,
       },
     });
   } catch (error) {

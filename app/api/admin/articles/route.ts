@@ -52,16 +52,6 @@ export async function GET(request: NextRequest) {
     const [articles, total] = await Promise.all([
       prisma.article.findMany({
         where,
-        include: {
-          author: {
-            select: {
-              id: true,
-              username: true,
-              name: true,
-              email: true,
-            },
-          },
-        },
         orderBy: { createdAt: 'desc' },
         skip: (filters.page - 1) * filters.limit,
         take: filters.limit,

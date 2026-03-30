@@ -10,8 +10,9 @@ const normalizeRegion = (value: string | null): Region => {
   return 'mb';
 };
 
-export async function GET(_req: NextRequest, { params }: { params: { region: string } }) {
-  const region = normalizeRegion(params.region);
+export async function GET(_req: NextRequest, { params }: { params: Promise<{ region: string }> }) {
+  const { region: regionParam } = await params;
+  const region = normalizeRegion(regionParam);
 
   const [
     hotNumbers,

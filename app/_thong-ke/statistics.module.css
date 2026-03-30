@@ -1,0 +1,16 @@
+.pageContainer {
+  width: 100%;
+}
+
+.mainContent {
+  display: flex;
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.contentArea {
+  flex: 1;
+  min-width: 0;
+}
