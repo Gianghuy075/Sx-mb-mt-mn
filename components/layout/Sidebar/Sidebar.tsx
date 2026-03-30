@@ -3,9 +3,17 @@
  */
 
 import Link from 'next/link';
+import { getTodayString } from '@/lib/utils/dates';
 import styles from './Sidebar.module.css';
 
 export default function Sidebar() {
+  const today = getTodayString();
+  const thirtyDaysAgo = (() => {
+    const d = new Date();
+    d.setDate(d.getDate() - 30);
+    return d.toISOString().split('T')[0];
+  })();
+
   return (
     <aside className="sidebar">
       {/* Lotto Statistics */}
@@ -80,9 +88,9 @@ export default function Sidebar() {
         <p className="info-hint">Nhập bộ số để xem kết quả</p>
         <div className="date-range">
           <label>Từ ngày:</label>
-          <input type="date" defaultValue="2026-02-28" />
+          <input type="date" defaultValue={thirtyDaysAgo} />
           <label>Đến ngày:</label>
-          <input type="date" defaultValue="2026-03-28" />
+          <input type="date" defaultValue={today} />
         </div>
         <div className="province-select">
           <label>Tỉnh TP:</label>

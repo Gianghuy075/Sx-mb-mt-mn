@@ -5,11 +5,11 @@
 export interface AnalysisItem {
   id: string;
   date: string;
-  region: 'MB' | 'MN' | 'MT';
+  region: 'MB' | 'MN' | 'MT' | 'ALL';
   regionName: string;
   title: string;
   description: string;
-  type: 'trend' | 'hot-cold' | 'frequency' | 'cycle';
+  type: 'trend' | 'hot-cold' | 'frequency' | 'cycle' | 'analysis';
   typeLabel: string;
   metrics: string;
 }

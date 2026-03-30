@@ -16,6 +16,34 @@ import { getTodayString } from '@/lib/utils/dates';
 import { demoMB, demoMT, demoMN } from '@/lib/data/demoGenerator';
 
 /**
+ * Dev-only detailed API error logger.
+ * Helps pinpoint which upstream endpoint/params failed without spamming production logs.
+ */
+function logApiError(source: string, endpoint: string, params: Record<string, any>, error: any) {
+  if (process.env.NODE_ENV !== 'development') return;
+
+  const status = error?.response?.status ?? 'n/a';
+  const message =
+    error?.response?.data?.message ||
+    error?.response?.data?.error ||
+    error?.message ||
+    'Unknown error';
+
+  let body = '';
+  try {
+    body = error?.response?.data ? JSON.stringify(error.response.data).slice(0, 800) : '';
+  } catch {
+    body = '[unserializable]';
+  }
+
+  console.error(
+    `[API ERROR][${source}] endpoint=${endpoint} status=${status} msg=${message} params=${JSON.stringify(
+      params
+    )} body=${body}`
+  );
+}
+
+/**
  * Helper function to generate demo data for any region
  */
 function generateDemoData(region: Region, date: string): LotteryData {
@@ -92,7 +120,7 @@ export async function getDraws(region: Region, date: string): Promise<LotteryDat
     return normalizedData;
 
   } catch (error: any) {
-    console.error(`[API Error] ${error.message}`);
+    logApiError('getDraws', 'xosoapi.getRecentDraws', { region, date }, error);
 
     // 5. On rate limit (429), try stale cache
     if (error.response?.status === 429) {
@@ -155,7 +183,7 @@ export async function getHotNumbers(region: Region, limit: number = 10) {
     return response;
 
   } catch (error: any) {
-    console.error(`[API Error] ${error.message}`);
+    logApiError('getHotNumbers', 'xosoapi.getHotNumbers', { region, limit }, error);
 
     // Fallback to stale cache
     const stale = await cacheService.get(cacheKey, { includeExpired: true });
@@ -215,7 +243,7 @@ export async function getGapNumbers(region: Region, limit: number = 10) {
     return response;
 
   } catch (error: any) {
-    console.error(`[API Error] ${error.message}`);
+    logApiError('getGapNumbers', 'xosoapi.getGapNumbers', { region, limit }, error);
 
     const stale = await cacheService.get(cacheKey, { includeExpired: true });
     if (stale) {
@@ -273,7 +301,7 @@ export async function getFrequency(region: Region, limit: number = 100) {
     return response;
 
   } catch (error: any) {
-    console.error(`[API Error] ${error.message}`);
+    logApiError('getFrequency', 'xosoapi.getFrequency', { region, limit }, error);
 
     const stale = await cacheService.get(cacheKey, { includeExpired: true });
     if (stale) {
@@ -329,7 +357,7 @@ export async function getHeadTail(region: Region) {
     return response;
 
   } catch (error: any) {
-    console.error(`[API Error] ${error.message}`);
+    logApiError('getHeadTail', 'xosoapi.getHeadTail', { region }, error);
 
     const stale = await cacheService.get(cacheKey, { includeExpired: true });
     if (stale) {

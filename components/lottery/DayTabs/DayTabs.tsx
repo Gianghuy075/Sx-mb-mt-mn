@@ -1,88 +1,61 @@
 /**
  * Day Tabs Component
- * Shows tabs for different days/regions or provinces for multi-region
+ * Hiển thị 7 ngày gần nhất (tính từ hôm nay về trước)
+ * Click → navigate đến kết quả ngày đó
  */
 
 'use client';
 
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import type { Region } from '@/lib/types/lottery';
-import { getProvincesForDate } from '@/lib/data/schedules';
-import { getTodayString } from '@/lib/utils/dates';
 
 interface DayTabsProps {
   currentRegion: Region;
+  currentDate: string; // YYYY-MM-DD
 }
 
-export default function DayTabs({ currentRegion }: DayTabsProps) {
-  const today = getTodayString();
-  
-  // For MB, show days of week
-  // For MT/MN, show provinces
-  if (currentRegion === 'mb') {
-    const tabs = [
-      { id: 'mb', label: 'Miền Bắc' },
-      { id: 'thu2', label: 'Thứ 2' },
-      { id: 'thu3', label: 'Thứ 3' },
-      { id: 'thu4', label: 'Thứ 4' },
-      { id: 'thu5', label: 'Thứ 5' },
-      { id: 'thu6', label: 'Thứ 6' },
-      { id: 'thu7', label: 'Thứ 7' },
-      { id: 'cn', label: 'Chủ Nhật' },
-    ];
+const DAY_NAMES = ['Chủ Nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'];
 
-    return (
-      <div className="day-tabs">
-        {tabs.map((tab) => (
-          <button
-            key={tab.id}
-            className={`day-tab ${tab.id === currentRegion ? 'active' : ''}`}
-            onClick={() => {
-              console.log('Navigate to:', tab.id);
-            }}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
-    );
+const REGION_NAMES: Record<string, string> = {
+  mb: 'Miền Bắc',
+  mt: 'Miền Trung',
+  mn: 'Miền Nam',
+};
+
+function getLast7Days(regionLabel: string): { date: string; label: string }[] {
+  const result = [];
+  const today = new Date();
+
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(today);
+    d.setDate(today.getDate() - i);
+
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    const dateStr = `${yyyy}-${mm}-${dd}`;
+
+    const label = i === 0 ? regionLabel : DAY_NAMES[d.getDay()];
+    result.push({ date: dateStr, label });
   }
 
-  // For MT/MN, show provinces and day tabs
-  const provinces = getProvincesForDate(currentRegion, today);
-  const dayLabels: Record<number, string> = {
-    0: 'CN',
-    1: 'Thứ 2',
-    2: 'Thứ 3',
-    3: 'Thứ 4',
-    4: 'Thứ 5',
-    5: 'Thứ 6',
-    6: 'Thứ 7',
-  };
-  const dayLabel = dayLabels[new Date(today).getDay()];
+  return result;
+}
 
-  const tabs = [
-    { id: `${currentRegion}`, label: `XS${currentRegion.toUpperCase()}`, isRegion: true },
-    { id: 'mon', label: 'Thứ 2' },
-    { id: 'tue', label: 'Thứ 3' },
-    { id: 'wed', label: 'Thứ 4' },
-    { id: 'thu', label: 'Thứ 5' },
-    { id: 'fri', label: 'Thứ 6' },
-    { id: 'sat', label: 'Thứ 7' },
-    { id: 'sun', label: 'CN' },
-  ];
+export default function DayTabs({ currentRegion, currentDate }: DayTabsProps) {
+  const router = useRouter();
+  const regionLabel = REGION_NAMES[currentRegion] ?? 'Hôm nay';
+  const days = getLast7Days(regionLabel);
 
   return (
     <div className="day-tabs">
-      {tabs.map((tab) => (
+      {days.map((day) => (
         <button
-          key={tab.id}
-          className={`day-tab ${tab.isRegion ? 'active' : ''}`}
-          onClick={() => {
-            console.log('Navigate to:', tab.id);
-          }}
+          key={day.date}
+          className={`day-tab ${day.date === currentDate ? 'active' : ''}`}
+          onClick={() => router.push(`/${currentRegion}/${day.date}`)}
         >
-          {tab.label}
+          {day.label}
         </button>
       ))}
     </div>

@@ -10,10 +10,18 @@ import styles from './ResultsTable.module.css';
 
 interface ResultsTableMultiProps {
   data: LotteryDataMulti;
+  hotNumbers?: any;
+  gapNumbers?: any;
+  frequencyData?: any;
 }
 
-export default function ResultsTableMulti({ data }: ResultsTableMultiProps) {
+export default function ResultsTableMulti({ data, hotNumbers, gapNumbers, frequencyData }: ResultsTableMultiProps) {
   const regionName = getRegionName(data.region);
+  const hasStats = Boolean(
+    (hotNumbers?.success && (hotNumbers.data ?? []).length) ||
+    (gapNumbers?.success && (gapNumbers.data ?? []).length) ||
+    (frequencyData?.success && (frequencyData.data ?? []).length)
+  );
 
   // Group provinces into chunks of 3
   const provinceGroups: typeof data.provinces[] = [];
@@ -85,6 +93,57 @@ export default function ResultsTableMulti({ data }: ResultsTableMultiProps) {
           </table>
         </div>
       ))}
+
+      {hasStats && (
+        <div className="loto-stats-grid">
+          {hotNumbers?.success && (
+            <div className="loto-stat-card">
+              <h4>🔥 Top số nóng</h4>
+              <p className="loto-stat-desc">Về nhiều nhất 30 ngày gần đây</p>
+              <div className="loto-chip-list">
+                {(hotNumbers.data || []).slice(0, 5).map((item: any, idx: number) => (
+                  <div key={idx} className="loto-chip">
+                    <span className="chip-number">{item.number}</span>
+                    <span className="chip-meta">{item.count} lần</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {gapNumbers?.success && (
+            <div className="loto-stat-card">
+              <h4>🧊 Lô gan</h4>
+              <p className="loto-stat-desc">Số lâu chưa về (tính theo ngày)</p>
+              <div className="loto-chip-list">
+                {(gapNumbers.data || []).slice(0, 5).map((item: any, idx: number) => (
+                  <div key={idx} className="loto-chip">
+                    <span className="chip-number">{item.number}</span>
+                    <span className="chip-meta">{item.days} ngày</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {frequencyData?.success && (
+            <div className="loto-stat-card">
+              <h4>📊 Tần suất</h4>
+              <p className="loto-stat-desc">Số xuất hiện nhiều nhất 100 kỳ</p>
+              <div className="loto-chip-list">
+                {(frequencyData.data || []).slice(0, 5).map((item: any, idx: number) => (
+                  <div key={idx} className="loto-chip">
+                    <span className="chip-number">{item.number}</span>
+                    <span className="chip-meta">
+                      {(item.frequency ?? item.count ?? item.percentage ?? '').toString()} lần
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
     </section>
   );
 }

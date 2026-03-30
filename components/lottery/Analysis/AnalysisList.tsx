@@ -4,18 +4,32 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import styles from './AnalysisList.module.css';
 import AnalysisCard from './AnalysisCard';
 import { ANALYSIS_DEMO, ANALYSIS_TYPES, ANALYSIS_REGIONS, AnalysisItem } from '@/lib/data/analysis-demo';
 
-export default function AnalysisList() {
+interface AnalysisListProps {
+  items?: AnalysisItem[];
+}
+
+export default function AnalysisList({ items }: AnalysisListProps) {
   const [selectedType, setSelectedType] = useState('all');
   const [selectedRegion, setSelectedRegion] = useState('all');
 
-  const filteredAnalysis = ANALYSIS_DEMO.filter(item => {
-    const typeMatch = selectedType === 'all' || item.type === selectedType;
-    const regionMatch = selectedRegion === 'all' || item.region === selectedRegion.toUpperCase();
+  const data = useMemo(() => items ?? ANALYSIS_DEMO, [items]);
+
+  const filteredAnalysis = data.filter(item => {
+    const typeMatch =
+      selectedType === 'all' ||
+      item.type === selectedType ||
+      item.type === 'analysis'; // articles fallback
+
+    const regionMatch =
+      selectedRegion === 'all' ||
+      item.region === selectedRegion.toUpperCase() ||
+      item.region === 'ALL'; // articles fallback
+
     return typeMatch && regionMatch;
   });
 

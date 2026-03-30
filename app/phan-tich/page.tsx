@@ -1,82 +1,101 @@
-import { Metadata } from 'next';
-import Breadcrumb from '@/components/layout/Breadcrumb/Breadcrumb';
+/**
+ * Phân tích - UI gốc (header gradient + info) nhưng dữ liệu lấy từ API bài viết
+ */
+
+import { prisma } from '@/lib/db/prisma';
+import { formatFullDateVN } from '@/lib/utils/dates';
 import Sidebar from '@/components/layout/Sidebar/Sidebar';
 import AnalysisList from '@/components/lottery/Analysis/AnalysisList';
-import styles from '../_phan-tich/analysis.module.css';
+import type { AnalysisItem } from '@/lib/data/analysis-demo';
+import styles from './analysis.module.css';
 
-export const metadata: Metadata = {
-  title: 'Phân tích xổ số - Phân tích xu hướng, số nóng, tần suất xổ số Miền Bắc, Miền Trung, Miền Nam',
-  description: 'Phân tích xổ số chi tiết: xu hướng, số nóng lạnh, tần suất, chu kỳ lô tô. Công cụ phân tích xổ số hôm nay',
+function detectRegion(text: string): 'MB' | 'MN' | 'MT' | 'ALL' {
+  const t = text.toLowerCase();
+  if (t.includes('miền bắc') || t.includes('xsm b') || t.includes('xsmb') || t.includes(' mb ')) return 'MB';
+  if (t.includes('miền nam') || t.includes('xsm n') || t.includes('xsmn') || t.includes(' mn ')) return 'MN';
+  if (t.includes('miền trung') || t.includes('xsm t') || t.includes('xsmt') || t.includes(' mt ')) return 'MT';
+  return 'ALL';
+}
+
+function detectType(text: string): 'trend' | 'hot-cold' | 'frequency' | 'cycle' | 'analysis' {
+  const t = text.toLowerCase();
+  if (t.includes('xu hướng') || t.includes('trend')) return 'trend';
+  if (t.includes('nóng') || t.includes('lạnh') || t.includes('hot') || t.includes('cold')) return 'hot-cold';
+  if (t.includes('tần suất') || t.includes('frequency')) return 'frequency';
+  if (t.includes('chu kỳ') || t.includes('cycle')) return 'cycle';
+  return 'analysis';
+}
+
+export const metadata = {
+  title: 'Phân tích xổ số - Xu hướng, số nóng, tần suất',
+  description: 'Phân tích xổ số chi tiết, xu hướng, số nóng lạnh, tần suất, chu kỳ lô tô.',
 };
 
-export default function AnalysisPage() {
+async function getPublishedArticles() {
+  try {
+    return await prisma.article.findMany({
+      where: { status: 'published' },
+      orderBy: { publishedAt: 'desc' },
+      take: 24,
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        excerpt: true,
+        featuredImage: true,
+        publishedAt: true,
+        views: true,
+      },
+    });
+  } catch (error) {
+    console.error('Error fetching articles:', error);
+    return [];
+  }
+}
+
+export default async function AnalysisPage() {
+  const articles = await getPublishedArticles();
+  const analysisItems: AnalysisItem[] = articles.map((article) => ({
+    id: article.id,
+    date: article.publishedAt
+      ? `Cập nhật ${formatFullDateVN(article.publishedAt.toISOString().split('T')[0])}`
+      : 'Chưa xuất bản',
+    region: detectRegion(`${article.title} ${article.excerpt ?? ''}`),
+    regionName: 'Toàn quốc',
+    title: article.title,
+    description: article.excerpt || 'Xem chi tiết bài phân tích.',
+    type: detectType(`${article.title} ${article.excerpt ?? ''}`),
+    typeLabel: 'Phân tích',
+    metrics: `👁️ ${article.views} lượt xem`,
+  }));
 
   return (
     <div className={styles.pageContainer}>
-
       <div className={styles.mainContent}>
         <div className={styles.contentArea}>
           <div className={styles.pageHeader}>
-            <h1 className={styles.pageTitle}>📊 PHÂN TÍCH XỐ SỐ</h1>
+            <h1 className={styles.pageTitle}>📊 PHÂN TÍCH XỔ SỐ</h1>
             <p className={styles.pageSubtitle}>
-              Công cụ phân tích xu hướng, số nóng, tần suất, chu kỳ xổ số chi tiết
+              Xu hướng, số nóng/lạnh, tần suất và nhận định chuyên gia
             </p>
           </div>
 
-          {/* Analysis List Component */}
-          <AnalysisList />
-
-          {/* Info Section */}
-          <div className={styles.infoSection}>
-            <h2>📈 Các loại phân tích</h2>
-            
-            <div className={styles.infoGrid}>
-              <div className={styles.infoCard}>
-                <h3>Xu hướng</h3>
-                <p>
-                  Phân tích các con số nóng (xuất hiện nhiều) và lạnh (ít xuất hiện) để
-                  nhận biết xu hướng hiện tại của thị trường.
-                </p>
-              </div>
-
-              <div className={styles.infoCard}>
-                <h3>Số nóng - Lạnh</h3>
-                <p>
-                  Theo dõi các con số có tần suất xuất hiện cao (nóng) và thấp (lạnh)
-                  trong khoảng thời gian nhất định.
-                </p>
-              </div>
-
-              <div className={styles.infoCard}>
-                <h3>Tần suất</h3>
-                <p>
-                  Thống kê chi tiết số lần mỗi con số xuất hiện, giúp xác định mẫu
-                  và xu hướng dài hạn.
-                </p>
-              </div>
-
-              <div className={styles.infoCard}>
-                <h3>Chu kỳ</h3>
-                <p>
-                  Theo dõi chu kỳ xuất hiện của các con số, dự đoán thời điểm có khả
-                  năng xuất hiện tiếp theo.
-                </p>
-              </div>
+          <div className={styles.articlesSection}>
+            <div className={styles.articlesHeader}>
+              <h2 className={styles.articlesTitle}>Bài viết mới nhất</h2>
+              <span style={{ color: 'var(--text-muted)', fontSize: '13px' }}>
+                {articles.length} bài đã xuất bản
+              </span>
             </div>
 
-            <div className={styles.disclaimer}>
-              <h3>⚠️ Lưu ý quan trọng:</h3>
-              <ul>
-                <li>Phân tích dữ liệu lịch sử không đảm bảo kết quả tương lai</li>
-                <li>Xổ số là trò chơi may rủi, không có cách chắc chắn để dự đoán</li>
-                <li>Hãy chơi một cách lành mạnh và kiểm soát chi tiêu</li>
-                <li>Chỉ chơi xổ số hợp pháp tại các cơ sở được phép</li>
-              </ul>
-            </div>
+            {articles.length === 0 ? (
+              <div className={styles.empty}>Chưa có bài viết nào được xuất bản.</div>
+            ) : (
+              <AnalysisList items={analysisItems} />
+            )}
           </div>
         </div>
 
-        {/* Sidebar */}
         <Sidebar />
       </div>
     </div>

@@ -81,7 +81,7 @@ docker compose logs nginx
 
 - Trang chủ: `http://YOUR_SERVER_IP`
 - Đăng nhập admin: `http://YOUR_SERVER_IP/login`
-- Tin tức: `http://YOUR_SERVER_IP/tin-tuc`
+ - Phân tích: `http://YOUR_SERVER_IP/phan-tich`
 
 ## Các lệnh thường dùng
 

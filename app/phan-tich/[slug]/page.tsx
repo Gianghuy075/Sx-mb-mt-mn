@@ -1,5 +1,5 @@
 /**
- * Article Detail Page (Public)
+ * Phân tích chi tiết (tin tức)
  */
 
 import { notFound } from 'next/navigation';
@@ -15,10 +15,7 @@ interface PageProps {
 async function getArticleBySlug(slug: string) {
   try {
     const article = await prisma.article.findUnique({
-      where: {
-        slug,
-        status: 'published',
-      },
+      where: { slug, status: 'published' },
       select: {
         id: true,
         title: true,
@@ -28,15 +25,11 @@ async function getArticleBySlug(slug: string) {
         publishedAt: true,
         views: true,
         author: {
-          select: {
-            name: true,
-            username: true,
-          },
+          select: { name: true, username: true },
         },
       },
     });
 
-    // Increment views
     if (article) {
       await prisma.article.update({
         where: { id: article.id },
@@ -56,13 +49,11 @@ export async function generateMetadata({ params }: PageProps) {
   const article = await getArticleBySlug(slug);
 
   if (!article) {
-    return {
-      title: 'Bài viết không tồn tại',
-    };
+    return { title: 'Bài viết không tồn tại' };
   }
 
   return {
-    title: `${article.title} - Tin tức`,
+    title: `${article.title} - Phân tích`,
     description: article.excerpt || article.title,
   };
 }
@@ -77,32 +68,25 @@ export default async function ArticleDetailPage({ params }: PageProps) {
 
   return (
     <div className={styles.container}>
-      <article className={styles.article}>
+      <div className={styles.hero}>
+        <div className={styles.heroContent}>
+          <p className={styles.breadcrumb}>Trang chủ / Phân tích / {article.title}</p>
+          <h1 className={styles.title}>{article.title}</h1>
+          <div className={styles.meta}>
+            <span>✍️ {article.author?.name || article.author?.username || 'Admin'}</span>
+            <span>📅 {article.publishedAt ? formatFullDateVN(article.publishedAt.toISOString().split('T')[0]) : 'N/A'}</span>
+            <span>👁️ {article.views} lượt xem</span>
+          </div>
+          {article.excerpt && <p className={styles.excerpt}>{article.excerpt}</p>}
+        </div>
         {article.featuredImage && (
-          <div className={styles.featuredImage}>
+          <div className={styles.heroImage}>
             <img src={article.featuredImage} alt={article.title} />
           </div>
         )}
+      </div>
 
-        <header className={styles.articleHeader}>
-          <h1 className={styles.title}>{article.title}</h1>
-
-          <div className={styles.meta}>
-            <span className={styles.author}>
-              ✍️ {article.author?.name || article.author?.username || 'Admin'}
-            </span>
-            <span className={styles.date}>
-              📅{' '}
-              {article.publishedAt
-                ? formatFullDateVN(article.publishedAt.toISOString().split('T')[0])
-                : 'N/A'}
-            </span>
-            <span className={styles.views}>👁️ {article.views} lượt xem</span>
-          </div>
-
-          {article.excerpt && <p className={styles.excerpt}>{article.excerpt}</p>}
-        </header>
-
+      <article className={styles.article}>
         <ArticleContent content={article.content} className={styles.content} />
       </article>
     </div>

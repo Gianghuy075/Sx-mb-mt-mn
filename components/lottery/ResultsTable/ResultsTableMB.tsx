@@ -8,9 +8,13 @@ import styles from './ResultsTable.module.css';
 
 interface ResultsTableMBProps {
   data: LotteryDataMB;
+  headTailData?: { success: boolean; data?: Record<string, Record<string, string[]>> } | null;
+  hotNumbers?: any;
+  gapNumbers?: any;
+  frequencyData?: any;
 }
 
-export default function ResultsTableMB({ data }: ResultsTableMBProps) {
+export default function ResultsTableMB({ data, headTailData, hotNumbers, gapNumbers, frequencyData }: ResultsTableMBProps) {
   return (
     <>
       <section className={styles.resultsSection}>
@@ -55,7 +59,12 @@ export default function ResultsTableMB({ data }: ResultsTableMBProps) {
         </div>
       </section>
 
-      <LotoStatistics />
+      <LotoStatistics
+        headTailData={headTailData}
+        hotNumbers={hotNumbers}
+        gapNumbers={gapNumbers}
+        frequencyData={frequencyData}
+      />
     </>
   );
 }

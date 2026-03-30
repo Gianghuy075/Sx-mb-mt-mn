@@ -5,6 +5,7 @@
 
 import { notFound } from 'next/navigation';
 import { fetchLotteryData } from '@/lib/api/client';
+import { getHeadTail, getHotNumbers, getGapNumbers, getFrequency } from '@/lib/api/lottery';
 import { isValidRegion } from '@/lib/utils/regions';
 import { isValidDate, getTodayString, isFutureDate } from '@/lib/utils/dates';
 import ResultsTableMB from '@/components/lottery/ResultsTable/ResultsTableMB';
@@ -12,10 +13,7 @@ import ResultsTableMulti from '@/components/lottery/ResultsTable/ResultsTableMul
 import DayTabs from '@/components/lottery/DayTabs/DayTabs';
 import Sidebar from '@/components/layout/Sidebar/Sidebar';
 import Breadcrumb from '@/components/layout/Breadcrumb/Breadcrumb';
-import { XSMN_DEMO_DATA } from '@/lib/data/xsmn-demo';
-import { XSMB_DEMO_DATA } from '@/lib/data/xsmb-demo';
-import { XSMT_DEMO_DATA } from '@/lib/data/xsmt-demo';
-import type { Region } from '@/lib/types/lottery';
+import type { Region, LotteryDataMB } from '@/lib/types/lottery';
 
 interface PageProps {
   params: Promise<{
@@ -25,78 +23,77 @@ interface PageProps {
 }
 
 export default async function ResultsPage({ params }: PageProps) {
-  try {
-    const { region, date } = await params;
+  const { region, date } = await params;
 
-    console.log(`[ResultsPage] Attempting to load ${region}/${date}`);
-
-    // Validate region
-    if (!isValidRegion(region)) {
-      console.warn(`[ResultsPage] Invalid region: ${region}`);
-      notFound();
-    }
-
-    // Handle "today" alias
-    const actualDate = date === 'today' ? getTodayString() : date;
-
-    // Validate date
-    if (!isValidDate(actualDate)) {
-      console.warn(`[ResultsPage] Invalid date format: ${actualDate}`);
-      notFound();
-    }
-
-    if (isFutureDate(actualDate)) {
-      console.warn(`[ResultsPage] Future date not allowed: ${actualDate}`);
-      notFound();
-    }
-
-    console.log(`[ResultsPage] Valid params: region=${region}, date=${actualDate}`);
-
-    // Fetch lottery data (Server Component - runs on server)
-    // Use fixed demo data for both MB and MN
-    let data;
-    if (region === 'mb') {
-      data = XSMB_DEMO_DATA;
-      console.log(`[ResultsPage] Using fixed XSMB demo data`);
-    } else if (region === 'mn') {
-      data = XSMN_DEMO_DATA;
-      console.log(`[ResultsPage] Using fixed XSMN demo data`);
-    } else if (region === 'mt') {
-      data = XSMT_DEMO_DATA;
-      console.log(`[ResultsPage] Using fixed XSMT demo data`);
-    } else {
-      data = await fetchLotteryData(region as Region, actualDate);
-    }
-
-    console.log(`[ResultsPage] Data fetched: region=${data.region}, provinces=${data.region === 'mb' ? 1 : (data as any).provinces?.length || 0}`);
-
-    return (
-      <>
-        <Breadcrumb region={region as Region} />
-
-        <div className="main-wrapper">
-          <main className="main-content">
-            <DayTabs currentRegion={region as Region} />
-
-            {data.region === 'mb' ? (
-              <ResultsTableMB data={data as any} />
-            ) : (
-              <ResultsTableMulti data={data as any} />
-            )}
-          </main>
-
-          <Sidebar />
-        </div>
-      </>
-    );
-  } catch (error) {
-    console.error('[ResultsPage] Error:', error);
-    throw error;
+  // Validate region
+  if (!isValidRegion(region)) {
+    notFound();
   }
+
+  // Handle "today" alias
+  const actualDate = date === 'today' ? getTodayString() : date;
+
+  // Validate date
+  if (!isValidDate(actualDate) || isFutureDate(actualDate)) {
+    notFound();
+  }
+
+  const typedRegion = region as Region;
+
+  // Fetch lottery data and statistics in parallel (per-region)
+  const [data, headTailData, hotNumbers, gapNumbers, frequencyData] = await Promise.all([
+    fetchLotteryData(typedRegion, actualDate),
+    getHeadTail(typedRegion),
+    getHotNumbers(typedRegion, 10),
+    getGapNumbers(typedRegion, 10),
+    getFrequency(typedRegion, 20),
+  ]);
+
+  return (
+    <>
+      <Breadcrumb region={typedRegion} />
+
+      <div className="main-wrapper">
+        <main className="main-content">
+          <DayTabs currentRegion={typedRegion} currentDate={actualDate} />
+
+          {!data ? (
+            <div style={{
+              background: 'white',
+              borderRadius: '8px',
+              padding: '48px',
+              textAlign: 'center',
+              color: '#666',
+              fontSize: '16px',
+            }}>
+              Chưa có kết quả xổ số. Vui lòng quay lại sau 18:30.
+            </div>
+          ) : data.region === 'mb' ? (
+              <ResultsTableMB
+                data={data as LotteryDataMB}
+                headTailData={headTailData}
+                hotNumbers={hotNumbers}
+                gapNumbers={gapNumbers}
+                frequencyData={frequencyData}
+              />
+            ) : (
+              <ResultsTableMulti
+                data={data}
+                hotNumbers={hotNumbers}
+                gapNumbers={gapNumbers}
+                frequencyData={frequencyData}
+              />
+            )}
+        </main>
+
+        <Sidebar />
+      </div>
+    </>
+  );
 }
 
-// Configure ISR revalidation (matches database cache TTL)
-export const revalidate = 21600; // 6 hours
+// Disable HTML/route caching – we already cache data at API layer
+export const revalidate = 0;
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: PageProps) {
@@ -123,7 +120,6 @@ export async function generateStaticParams() {
   const regions: Region[] = ['mb', 'mt', 'mn'];
   const today = getTodayString();
 
-  // Generate params for today for all regions
   return regions.map((region) => ({
     region,
     date: today,
