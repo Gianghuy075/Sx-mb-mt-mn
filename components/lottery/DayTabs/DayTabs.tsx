@@ -53,7 +53,7 @@ export default function DayTabs({ currentRegion, currentDate }: DayTabsProps) {
         <button
           key={day.date}
           className={`day-tab ${day.date === currentDate ? 'active' : ''}`}
-          onClick={() => router.push(`/${currentRegion}/${day.date}`)}
+          onClick={() => router.push(`/${currentRegion}/${day.date === days[0].date ? 'today' : day.date}`)}
         >
           {day.label}
         </button>

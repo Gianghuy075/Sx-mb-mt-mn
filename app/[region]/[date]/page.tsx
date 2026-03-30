@@ -3,7 +3,7 @@
  * Displays lottery results for a specific region and date
  */
 
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { fetchLotteryData } from '@/lib/api/client';
 import { getHeadTail, getHotNumbers, getGapNumbers, getFrequency } from '@/lib/api/lottery';
 import { isValidRegion } from '@/lib/utils/regions';
@@ -28,6 +28,11 @@ export default async function ResultsPage({ params }: PageProps) {
   // Validate region
   if (!isValidRegion(region)) {
     notFound();
+  }
+
+  // If date is today's actual date, redirect to /today alias
+  if (date !== 'today' && date === getTodayString()) {
+    redirect(`/${region}/today`);
   }
 
   // Handle "today" alias

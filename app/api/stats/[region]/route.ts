@@ -1,6 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getHotNumbers, getGapNumbers, getFrequency, getHeadTail } from '@/lib/api/lottery';
-import * as xosoapi from '@/lib/api/xosoapi';
+import {
+  getHotNumbers,
+  getGapNumbers,
+  getFrequency,
+  getHeadTail,
+  getPairFrequency,
+  getSpecialWeek,
+  getLotoCycle,
+  getMatrix,
+  getTheoTong,
+  getLoGan,
+} from '@/lib/api/lottery';
 import type { Region } from '@/lib/types/lottery';
 
 const normalizeRegion = (value: string | null): Region => {
@@ -30,12 +40,12 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ reg
     getGapNumbers(region),
     getFrequency(region),
     getHeadTail(region),
-    xosoapi.getPairFrequency({ region: region.toUpperCase() as any }).catch((e) => ({ success: false, error: String(e) })),
-    xosoapi.getSpecialWeek({ region: region.toUpperCase() as any }).catch((e) => ({ success: false, error: String(e) })),
-    xosoapi.getLotoCycle({ region: region.toUpperCase() as any }).catch((e) => ({ success: false, error: String(e) })),
-    xosoapi.getMatrix({ region: region.toUpperCase() as any }).catch((e) => ({ success: false, error: String(e) })),
-    xosoapi.getTheoTong({ region: region.toUpperCase() as any }).catch((e) => ({ success: false, error: String(e) })),
-    xosoapi.getLoGan({ region: 'MB' as any }).catch((e) => ({ success: false, error: String(e) })), // chỉ MB hỗ trợ
+    getPairFrequency(region),
+    getSpecialWeek(region),
+    getLotoCycle(region),
+    getMatrix(region),
+    getTheoTong(region),
+    getLoGan(region),
   ]);
 
   return NextResponse.json({

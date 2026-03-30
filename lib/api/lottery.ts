@@ -386,6 +386,187 @@ export async function getHeadTail(region: Region) {
 }
 
 /**
+ * Get pair frequency statistics with caching
+ */
+export async function getPairFrequency(region: Region) {
+  const cacheKey = cacheService.generateKey({ region, dataType: 'pair-frequency' });
+
+  try {
+    const cached = await cacheService.get(cacheKey);
+    if (cached) {
+      console.log(`[Cache HIT] ${cacheKey}`);
+      return JSON.parse(cached.data);
+    }
+    console.log(`[Cache MISS] ${cacheKey}`);
+
+    const response = await xosoapi.getPairFrequency({ region: region.toUpperCase() as 'MB' });
+
+    if (!response.success) throw new Error(extractErrorMessage(response));
+
+    const expiresAt = cacheService.calculateExpiration({ region, dataType: 'pair-frequency' });
+    await cacheService.set(cacheKey, response, expiresAt);
+    console.log(`[Cache SET] ${cacheKey}`);
+    return response;
+  } catch (error: any) {
+    logApiError('getPairFrequency', 'xosoapi.getPairFrequency', { region }, error);
+    const stale = await cacheService.get(cacheKey, { includeExpired: true });
+    if (stale) return JSON.parse(stale.data);
+    return { success: false, data: [], meta: { region: region.toUpperCase() } };
+  }
+}
+
+/**
+ * Get special week statistics with caching
+ */
+export async function getSpecialWeek(region: Region) {
+  const cacheKey = cacheService.generateKey({ region, dataType: 'special-week' });
+
+  try {
+    const cached = await cacheService.get(cacheKey);
+    if (cached) {
+      console.log(`[Cache HIT] ${cacheKey}`);
+      return JSON.parse(cached.data);
+    }
+    console.log(`[Cache MISS] ${cacheKey}`);
+
+    const response = await xosoapi.getSpecialWeek({ region: region.toUpperCase() as 'MB' });
+
+    if (!response.success) throw new Error(extractErrorMessage(response));
+
+    const expiresAt = cacheService.calculateExpiration({ region, dataType: 'special-week' });
+    await cacheService.set(cacheKey, response, expiresAt);
+    console.log(`[Cache SET] ${cacheKey}`);
+    return response;
+  } catch (error: any) {
+    logApiError('getSpecialWeek', 'xosoapi.getSpecialWeek', { region }, error);
+    const stale = await cacheService.get(cacheKey, { includeExpired: true });
+    if (stale) return JSON.parse(stale.data);
+    return { success: false, data: [], meta: { region: region.toUpperCase() } };
+  }
+}
+
+/**
+ * Get loto cycle statistics with caching
+ */
+export async function getLotoCycle(region: Region) {
+  const cacheKey = cacheService.generateKey({ region, dataType: 'loto-cycle' });
+
+  try {
+    const cached = await cacheService.get(cacheKey);
+    if (cached) {
+      console.log(`[Cache HIT] ${cacheKey}`);
+      return JSON.parse(cached.data);
+    }
+    console.log(`[Cache MISS] ${cacheKey}`);
+
+    const response = await xosoapi.getLotoCycle({ region: region.toUpperCase() as 'MB' });
+
+    if (!response.success) throw new Error(extractErrorMessage(response));
+
+    const expiresAt = cacheService.calculateExpiration({ region, dataType: 'loto-cycle' });
+    await cacheService.set(cacheKey, response, expiresAt);
+    console.log(`[Cache SET] ${cacheKey}`);
+    return response;
+  } catch (error: any) {
+    logApiError('getLotoCycle', 'xosoapi.getLotoCycle', { region }, error);
+    const stale = await cacheService.get(cacheKey, { includeExpired: true });
+    if (stale) return JSON.parse(stale.data);
+    return { success: false, data: [], meta: { region: region.toUpperCase() } };
+  }
+}
+
+/**
+ * Get matrix statistics with caching
+ */
+export async function getMatrix(region: Region) {
+  const cacheKey = cacheService.generateKey({ region, dataType: 'matrix' });
+
+  try {
+    const cached = await cacheService.get(cacheKey);
+    if (cached) {
+      console.log(`[Cache HIT] ${cacheKey}`);
+      return JSON.parse(cached.data);
+    }
+    console.log(`[Cache MISS] ${cacheKey}`);
+
+    const response = await xosoapi.getMatrix({ region: region.toUpperCase() as 'MB' });
+
+    if (!response.success) throw new Error(extractErrorMessage(response));
+
+    const expiresAt = cacheService.calculateExpiration({ region, dataType: 'matrix' });
+    await cacheService.set(cacheKey, response, expiresAt);
+    console.log(`[Cache SET] ${cacheKey}`);
+    return response;
+  } catch (error: any) {
+    logApiError('getMatrix', 'xosoapi.getMatrix', { region }, error);
+    const stale = await cacheService.get(cacheKey, { includeExpired: true });
+    if (stale) return JSON.parse(stale.data);
+    return { success: false, data: [], meta: { region: region.toUpperCase() } };
+  }
+}
+
+/**
+ * Get theo tong statistics with caching
+ */
+export async function getTheoTong(region: Region) {
+  const cacheKey = cacheService.generateKey({ region, dataType: 'theo-tong' });
+
+  try {
+    const cached = await cacheService.get(cacheKey);
+    if (cached) {
+      console.log(`[Cache HIT] ${cacheKey}`);
+      return JSON.parse(cached.data);
+    }
+    console.log(`[Cache MISS] ${cacheKey}`);
+
+    const response = await xosoapi.getTheoTong({ region: region.toUpperCase() as 'MB' });
+
+    if (!response.success) throw new Error(extractErrorMessage(response));
+
+    const expiresAt = cacheService.calculateExpiration({ region, dataType: 'theo-tong' });
+    await cacheService.set(cacheKey, response, expiresAt);
+    console.log(`[Cache SET] ${cacheKey}`);
+    return response;
+  } catch (error: any) {
+    logApiError('getTheoTong', 'xosoapi.getTheoTong', { region }, error);
+    const stale = await cacheService.get(cacheKey, { includeExpired: true });
+    if (stale) return JSON.parse(stale.data);
+    return { success: false, data: [], meta: { region: region.toUpperCase() } };
+  }
+}
+
+/**
+ * Get lo gan statistics with caching
+ * Note: XoSoAPI only supports MB for this endpoint
+ */
+export async function getLoGan(region: Region) {
+  const cacheKey = cacheService.generateKey({ region, dataType: 'lo-gan' });
+
+  try {
+    const cached = await cacheService.get(cacheKey);
+    if (cached) {
+      console.log(`[Cache HIT] ${cacheKey}`);
+      return JSON.parse(cached.data);
+    }
+    console.log(`[Cache MISS] ${cacheKey}`);
+
+    const response = await xosoapi.getLoGan({ region: 'MB' });
+
+    if (!response.success) throw new Error(extractErrorMessage(response));
+
+    const expiresAt = cacheService.calculateExpiration({ region, dataType: 'lo-gan' });
+    await cacheService.set(cacheKey, response, expiresAt);
+    console.log(`[Cache SET] ${cacheKey}`);
+    return response;
+  } catch (error: any) {
+    logApiError('getLoGan', 'xosoapi.getLoGan', { region }, error);
+    const stale = await cacheService.get(cacheKey, { includeExpired: true });
+    if (stale) return JSON.parse(stale.data);
+    return { success: false, data: [], meta: { region: 'MB' } };
+  }
+}
+
+/**
  * Invalidate cache for a specific region and date
  *
  * @param region - Lottery region
@@ -414,6 +595,12 @@ export async function invalidateStatsCache(region: Region): Promise<number> {
     `gap:${region}`,
     `frequency:${region}`,
     `head-tail:${region}`,
+    `pair-frequency:${region}`,
+    `special-week:${region}`,
+    `loto-cycle:${region}`,
+    `matrix:${region}`,
+    `theo-tong:${region}`,
+    `lo-gan:${region}`,
   ];
 
   let total = 0;
