@@ -20,9 +20,6 @@ export default function Header() {
         </div>
         <div className="header-info">
           <span className="date-info">Hôm nay: {dateDisplay}</span>
-          <Link href="/phan-tich" className="news-btn">
-            Phân tích
-          </Link>
           <Link href="/login" className="login-btn">
             Đăng nhập
           </Link>
