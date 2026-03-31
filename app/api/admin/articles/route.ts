@@ -71,6 +71,7 @@ export async function GET(request: NextRequest) {
       featuredImage: doc.featured_image ?? null,
       status: doc.status,
       publishedAt: doc.published_at ?? null,
+      createdAt: doc.created_at ?? null,
       views: doc.views ?? 0,
       region: doc.region ?? null,
       type: doc.type ?? null,
