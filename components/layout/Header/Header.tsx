@@ -1,30 +1,31 @@
 /**
- * Header Component
+ * Header Component — Glassmorphism Indigo
  */
 
 'use client';
 
 import Link from 'next/link';
 import { getTodayString, formatFullDateVN } from '@/lib/utils/dates';
+import styles from './Header.module.css';
 
 export default function Header() {
   const today = getTodayString();
   const dateDisplay = formatFullDateVN(today);
 
   return (
-    <header className="site-header">
-      <div className="header-top">
-        <div className="logo-section">
-          <span className="site-name">XỔ SỐ</span>
-          <span className="tagline-header">Bản demo Website xổ số</span>
+    <header className={styles.siteHeader}>
+      <div className={styles.headerTop}>
+        <div className={styles.logoSection}>
+          <span className={styles.siteName}>KQXS.MOBI</span>
+          <span className={styles.taglineHeader}>Kết quả xổ số trực tiếp</span>
         </div>
-        <div className="header-info">
-          <span className="date-info">Hôm nay: {dateDisplay}</span>
-          <Link href="/login" className="login-btn">
+        <div className={styles.headerInfo}>
+          <span className={styles.dateInfo}>{dateDisplay}</span>
+          <Link href="/login" className={styles.loginBtn}>
             Đăng nhập
           </Link>
         </div>
-        <button className="mobile-menu-toggle" id="mobileMenuBtn">
+        <button className={styles.mobileMenuToggle} id="mobileMenuBtn">
           ☰
         </button>
       </div>

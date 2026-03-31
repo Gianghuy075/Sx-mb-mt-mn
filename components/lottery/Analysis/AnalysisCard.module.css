@@ -1,16 +1,19 @@
+/* Analysis Card — Indigo Theme */
 .card {
-  background: white;
-  border-left: 5px solid #d75651;
-  border-radius: 6px;
+  background: var(--surface);
+  border-left: 4px solid var(--primary);
+  border-radius: var(--radius-lg);
   padding: 1.5rem;
   margin-bottom: 1rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
+  box-shadow: var(--shadow-sm);
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary);
 }
 
 .card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-3px);
 }
 
 .cardHeader {
@@ -37,47 +40,52 @@
   align-items: center;
   gap: 0.35rem;
   padding: 0.35rem 0.75rem;
-  border-radius: 20px;
-  color: white;
-  font-size: 0.8rem;
+  border-radius: var(--radius-full);
+  color: #ffffff;
+  font-size: 0.75rem;
   font-weight: 600;
   white-space: nowrap;
+  box-shadow: var(--shadow-xs);
+}
+
+.regionBadge {
+  background: linear-gradient(135deg, var(--primary), var(--primary-hover));
 }
 
 .typeBadge {
-  background-color: #667eea;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
 }
 
 .date {
   font-size: 0.85rem;
-  color: #999;
+  color: var(--text-muted);
   white-space: nowrap;
   flex-shrink: 0;
 }
 
 .title {
   font-size: 1.1rem;
-  font-weight: 600;
-  color: #333;
+  font-weight: 700;
+  color: var(--text);
   margin: 0 0 0.75rem 0;
   line-height: 1.4;
 }
 
 .description {
   font-size: 0.95rem;
-  color: #666;
+  color: var(--text-secondary);
   margin: 0;
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
 .cardFooter {
-  border-top: 1px solid #f0f0f0;
+  border-top: 1px solid var(--border);
   padding-top: 0.75rem;
 }
 
 .metrics {
   font-size: 0.9rem;
-  color: #667eea;
+  color: var(--primary);
   font-weight: 500;
   line-height: 1.5;
 }
@@ -106,7 +114,7 @@
   .regionBadge,
   .typeBadge {
     padding: 0.3rem 0.6rem;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
   }
 
   .date {

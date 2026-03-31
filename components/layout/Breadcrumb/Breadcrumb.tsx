@@ -1,5 +1,5 @@
 /**
- * Breadcrumb Component
+ * Breadcrumb Component — Chevron Separators
  */
 
 import Link from 'next/link';
@@ -28,16 +28,20 @@ export default function Breadcrumb({ region, items }: BreadcrumbProps) {
     return (
       <div className="breadcrumb">
         {items.map((item, idx) => (
-          <span key={idx}>
+          <span key={idx} style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
             {item.href && !item.active ? (
               <>
                 <Link href={item.href}>{item.label}</Link>
-                {idx < items.length - 1 && ' / '}
+                {idx < items.length - 1 && (
+                  <span style={{ color: 'var(--text-muted)', fontSize: '10px', margin: '0 2px' }}>›</span>
+                )}
               </>
             ) : (
               <>
-                <span>{item.label}</span>
-                {idx < items.length - 1 && ' / '}
+                <span style={{ color: 'var(--text-secondary)', fontWeight: 500 }}>{item.label}</span>
+                {idx < items.length - 1 && (
+                  <span style={{ color: 'var(--text-muted)', fontSize: '10px', margin: '0 2px' }}>›</span>
+                )}
               </>
             )}
           </span>

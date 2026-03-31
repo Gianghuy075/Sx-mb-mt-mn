@@ -1,8 +1,11 @@
+/* Statistics Table — Indigo Theme */
 .container {
-  background: white;
-  border-radius: 8px;
+  background: var(--surface);
+  border-radius: var(--radius-lg);
   padding: 2rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  animation: fadeInUp 0.5s ease-out both;
 }
 
 .header {
@@ -11,42 +14,44 @@
 
 .title {
   font-size: 1.4rem;
-  font-weight: 600;
-  color: #333;
+  font-weight: 700;
+  color: var(--text);
   margin: 0 0 1rem 0;
+  letter-spacing: -0.02em;
 }
 
 .highlight {
-  background: #fffaf1;
-  border-left: 4px solid #f59e0b;
+  background: var(--primary-light);
+  border-left: 4px solid var(--primary);
   padding: 1rem;
-  border-radius: 4px;
+  border-radius: 0 var(--radius) var(--radius) 0;
   margin-top: 1rem;
 }
 
 .highlightText {
   font-size: 0.95rem;
-  color: #666;
+  color: var(--text-secondary);
   margin: 0;
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
 .number {
-  color: #2563eb;
-  font-weight: bold;
+  color: var(--primary);
+  font-weight: 700;
   font-size: 1.1rem;
 }
 
 .description {
   font-size: 0.95rem;
-  color: #666;
+  color: var(--text-secondary);
   margin-bottom: 1rem;
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
 .tableWrapper {
   overflow-x: auto;
   margin-bottom: 2rem;
+  border-radius: var(--radius);
 }
 
 .table {
@@ -56,12 +61,15 @@
 }
 
 .table th {
-  background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
-  color: #666;
+  background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-100) 100%);
+  color: var(--primary-dark);
   padding: 0.85rem;
   text-align: left;
   font-weight: 600;
-  border-bottom: 2px solid #d1d5db;
+  border-bottom: 2px solid var(--primary-200);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
 .table th:nth-child(1) {
@@ -76,17 +84,21 @@
 
 .table td {
   padding: 0.85rem;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--border);
   text-align: center;
 }
 
+.table tbody tr:nth-child(even) {
+  background: var(--bg);
+}
+
 .table tbody tr:hover {
-  background-color: #f9fafb;
+  background: var(--primary-light);
 }
 
 .date {
   text-align: left;
-  color: #666;
+  color: var(--text-secondary);
   font-size: 0.9rem;
 }
 
@@ -99,12 +111,12 @@
 }
 
 .firstPart {
-  color: #1e40af;
+  color: var(--primary);
   font-weight: 600;
 }
 
 .secondPart {
-  color: #dc2626;
+  color: var(--danger);
   font-weight: 700;
 }
 
@@ -114,24 +126,24 @@
   justify-content: center;
   gap: 0.25rem;
   font-weight: 500;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .nextDay {
-  color: #666;
+  color: var(--text-secondary);
   font-size: 0.9rem;
 }
 
 .footer {
-  background: #f9fafb;
+  background: var(--bg);
   padding: 1.25rem;
-  border-radius: 6px;
-  border-top: 1px solid #e5e7eb;
+  border-radius: var(--radius);
+  border-top: 2px solid var(--primary-200);
 }
 
 .footerText {
-  font-weight: 600;
-  color: #333;
+  font-weight: 700;
+  color: var(--text);
   margin: 0 0 0.75rem 0;
   font-size: 0.95rem;
 }
@@ -145,15 +157,18 @@
 .link {
   display: block;
   padding: 0.5rem 0;
-  color: #3b82f6;
+  color: var(--primary);
   text-decoration: none;
   font-size: 0.9rem;
-  border-bottom: 1px solid #f0f0f0;
+  font-weight: 500;
+  border-bottom: 1px solid var(--border-light);
+  transition: all 200ms ease;
 }
 
 .link:hover {
-  color: #1e40af;
-  text-decoration: underline;
+  color: var(--primary-hover);
+  text-decoration: none;
+  padding-left: 8px;
 }
 
 .link:last-child {

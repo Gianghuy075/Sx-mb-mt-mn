@@ -1,39 +1,47 @@
-/* Results Section */
+/* Results Section — Modern Indigo Theme */
 .resultsSection {
-  background: var(--white);
-  border: 1px solid var(--border-light);
-  border-radius: 4px;
-  padding: 15px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 0;
   margin-bottom: 20px;
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  animation: fadeInUp 0.5s ease-out both;
 }
 
 .sectionTitle {
   font-size: 16px;
-  font-weight: bold;
-  color: var(--primary-red);
-  margin-bottom: 10px;
-  background: var(--light-yellow);
-  padding: 10px;
-  border-radius: 3px;
+  font-weight: 700;
+  color: var(--primary);
+  margin: 0;
+  background: linear-gradient(135deg, var(--primary-light), var(--primary-100));
+  padding: 14px 20px;
+  border-bottom: 2px solid var(--primary-200);
+  letter-spacing: -0.01em;
 }
 
 .resultsInfo {
-  font-size: 12px;
-  color: var(--text-muted);
-  margin-bottom: 15px;
-  padding: 5px 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
 }
 
 .infoLink a {
-  color: var(--primary-red);
+  color: var(--primary);
   text-decoration: none;
+  font-weight: 500;
+  transition: color 200ms ease;
 }
 
 .infoLink a:hover {
+  color: var(--primary-hover);
   text-decoration: underline;
 }
 
-/* Results List */
+/* Results List — MB */
 .resultsList {
   display: flex;
   flex-direction: column;
@@ -42,9 +50,18 @@
 .resultRow {
   display: flex;
   align-items: center;
-  padding: 15px 20px;
-  border-bottom: 1px solid var(--border-light);
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
   min-height: 50px;
+  transition: background 150ms ease;
+}
+
+.resultRow:nth-child(even) {
+  background: var(--bg);
+}
+
+.resultRow:hover {
+  background: var(--primary-light);
 }
 
 .resultRow:last-child {
@@ -53,48 +70,63 @@
 
 .resultLabel {
   width: 140px;
-  font-weight: bold;
+  font-weight: 600;
   font-size: 13px;
   flex-shrink: 0;
   text-transform: uppercase;
+  color: var(--text-secondary);
+  letter-spacing: 0.03em;
 }
 
 .resultNumbers {
   flex: 1;
   display: flex;
   justify-content: center;
-  gap: 20px;
+  gap: 16px;
   flex-wrap: wrap;
 }
 
 .number {
-  font-weight: bold;
-  color: var(--text-dark);
+  font-weight: 700;
+  color: var(--text);
   font-size: 16px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  transition: all 200ms ease;
+}
+
+.number:hover {
+  background: var(--primary-light);
+  color: var(--primary);
 }
 
 .number.large {
-  color: var(--primary-red);
-  font-size: 24px;
-  padding: 8px 16px;
-  border-radius: 4px;
-  font-weight: bold;
+  color: var(--danger);
+  font-size: 26px;
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #fef2f2, #fee2e2);
+  border: 2px solid #fecaca;
+  animation: numberPulse 2s ease-in-out 1;
+  letter-spacing: 0.05em;
 }
 
 /* Province Grid for MT/MN */
 .provinceGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
-  gap: 15px;
-  margin-top: 15px;
+  gap: 16px;
+  margin-top: 16px;
 }
 
 .lotteryTableWrap {
-  background: var(--white);
-  border: 1px solid var(--border-light);
-  border-radius: 4px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
   overflow: hidden;
-  margin-bottom: 15px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-sm);
 }
 
 .lotteryTable {
@@ -103,30 +135,30 @@
 }
 
 .lotteryTable caption {
-  background: var(--light-yellow);
-  padding: 10px;
-  font-weight: bold;
-  color: var(--primary-red);
+  background: linear-gradient(135deg, var(--primary-light), var(--primary-100));
+  padding: 12px;
+  font-weight: 700;
+  color: var(--primary);
   font-size: 14px;
   text-align: center;
-  border-bottom: 1px solid var(--table-border);
+  border-bottom: 2px solid var(--primary-200);
 }
 
-/* Province Headers (Đà Nẵng, Quảng Ngãi, etc.) */
+/* Province Headers */
 .lotteryTable thead tr {
-  background: var(--light-yellow);
-  border-bottom: 2px solid var(--table-border);
+  background: linear-gradient(135deg, var(--primary-light), var(--primary-100));
+  border-bottom: 2px solid var(--primary-200);
 }
 
 .provinceHeader {
-  background: var(--light-yellow);
+  background: linear-gradient(135deg, var(--primary-light), var(--primary-100));
   padding: 12px 8px;
-  font-weight: bold;
+  font-weight: 700;
   font-size: 14px;
   text-align: center;
-  color: var(--primary-red);
-  border-right: 1px solid var(--border-light);
-  border-bottom: 2px solid var(--table-border);
+  color: var(--primary);
+  border-right: 1px solid var(--border);
+  border-bottom: 2px solid var(--primary-200);
 }
 
 .provinceHeader:last-child {
@@ -135,30 +167,40 @@
 
 /* Prize Header (G column) */
 .prizeHeader {
-  background: var(--light-yellow);
+  background: linear-gradient(135deg, var(--primary-light), var(--primary-100));
   padding: 12px 8px;
-  font-weight: bold;
+  font-weight: 700;
   font-size: 14px;
   text-align: center;
-  color: var(--text-dark);
+  color: var(--text);
   width: 60px;
-  border-right: 1px solid var(--border-light);
-  border-bottom: 2px solid var(--table-border);
+  border-right: 1px solid var(--border);
+  border-bottom: 2px solid var(--primary-200);
 }
 
 /* Prize Label (8, 7, 6, etc.) */
 .prizeLabel {
-  background: #f0f0f0;
+  background: var(--bg-subtle);
   padding: 10px 8px;
-  font-weight: bold;
+  font-weight: 700;
   font-size: 13px;
   text-align: center;
   width: 60px;
-  border-right: 1px solid var(--border-light);
+  border-right: 1px solid var(--border);
+  color: var(--text-secondary);
 }
 
 .lotteryTable tbody tr {
-  border-bottom: 1px solid var(--border-light);
+  border-bottom: 1px solid var(--border);
+  transition: background 150ms ease;
+}
+
+.lotteryTable tbody tr:nth-child(even) {
+  background: var(--bg);
+}
+
+.lotteryTable tbody tr:hover {
+  background: var(--primary-light);
 }
 
 .lotteryTable tbody tr:last-child {
@@ -166,19 +208,20 @@
 }
 
 .lotteryTable th {
-  background: #f0f0f0;
+  background: var(--bg-subtle);
   padding: 10px 8px;
-  font-weight: bold;
+  font-weight: 700;
   font-size: 12px;
   text-align: left;
   width: 120px;
-  border-right: 1px solid var(--border-light);
+  border-right: 1px solid var(--border);
+  color: var(--text-secondary);
 }
 
 .lotteryTable td {
   padding: 10px 8px;
   text-align: center;
-  border-right: 1px solid var(--border-light);
+  border-right: 1px solid var(--border);
 }
 
 .lotteryTable td:last-child {
@@ -193,30 +236,40 @@
 }
 
 .prizeNum {
-  font-weight: bold;
-  color: var(--text-dark);
+  font-weight: 700;
+  color: var(--text);
   font-size: 14px;
   padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 200ms ease;
+}
+
+.prizeNum:hover {
+  background: var(--primary-light);
+  color: var(--primary);
 }
 
 /* Special styling for prize tiers */
 .lotteryTable .special td {
-  background: #fff9e6;
+  background: linear-gradient(135deg, #fef2f2, #fee2e2);
 }
 
 .lotteryTable .special .prizeNum {
-  color: var(--primary-red);
-  font-size: 18px;
-  font-weight: bold;
+  color: var(--danger);
+  font-size: 20px;
+  font-weight: 800;
+  animation: numberPulse 2s ease-in-out 1;
 }
 
 .lotteryTable .first .prizeNum {
-  color: var(--primary-red);
+  color: var(--primary);
   font-size: 16px;
+  font-weight: 700;
 }
 
 .lotteryTable .second .prizeNum {
-  font-size: 14px;
+  font-size: 15px;
+  font-weight: 600;
 }
 
 .lotteryTable .eighth .prizeNum {
@@ -228,17 +281,17 @@
   .resultRow {
     flex-direction: column;
     align-items: flex-start;
-    padding: 12px 15px;
+    padding: 12px 16px;
   }
 
   .resultLabel {
     width: 100%;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
   }
 
   .resultNumbers {
     justify-content: flex-start;
-    gap: 12px;
+    gap: 10px;
   }
 
   .provinceGrid {
@@ -247,7 +300,7 @@
 
   .provinceHeader {
     font-size: 12px;
-    padding: 8px 4px;
+    padding: 10px 6px;
   }
 
   .prizeLabel {
@@ -263,5 +316,15 @@
   .prizeNum {
     font-size: 12px;
     padding: 2px 4px;
+  }
+
+  .sectionTitle {
+    font-size: 14px;
+    padding: 12px 16px;
+  }
+
+  .resultsInfo {
+    padding: 10px 16px;
+    font-size: 12px;
   }
 }
